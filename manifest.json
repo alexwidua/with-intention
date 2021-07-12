@@ -1,0 +1,12 @@
+{
+	"name": "Intent",
+	"manifest_version": 3,
+	"version": "0.1",
+	"description": "Turns the page red when you click the icon",
+	"permissions": ["webNavigation", "scripting", "storage"],
+	"background": {
+		"service_worker": "background.js"
+	},
+	"host_permissions": ["http://*/", "https://*/"],
+	"options_page": "options.html"
+}
