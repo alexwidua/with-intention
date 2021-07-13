@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html>
-	<!-- <head>
-		<link rel="stylesheet" href="button.css" />
-	</head> -->
+	<head>
+		<link rel="stylesheet" href="options.css" />
+	</head>
 	<body>
 		<p>Add website that should be blocked:</p>
 		<ul id="list"></ul>
 		<div class="flex">
-			<input type="text" id="add-url" /><button onclick="addUrl()">
-				Add
-			</button>
+			<input type="text" id="add-input" />
+			<button id="add-button">Add</button>
 		</div>
+		<!---->
+		<p>Only active between</p>
+		<select name="from" id="from"></select>
+		<select name="to" id="to"></select>
 	</body>
 	<script src="options.js"></script>
 </html>

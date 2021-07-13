@@ -1,73 +1,49 @@
-var storedIntention = sessionStorage.getItem('intention')
+'use strict'
 
-function init() {
-	const wrapper = document.createElement('div')
-	wrapper.id = 'intent-wrapper'
+const editItem = function () {
+	const item = this.parentNode
 
-	const container = document.createElement('div')
-	container.id = 'intent-container'
-	wrapper.appendChild(container)
+	const input = item.querySelector('input[type=text]')
+	const label = item.querySelector('label')
 
-	document.body.prepend(wrapper)
+	const isEditing = item.classList.contains('isEditing')
 
-	if (storedIntention) {
-		showIntention(container, storedIntention)
+	// if (input.value) {
+	if (isEditing) {
+		sessionStorage.setItem('intention', input.value)
+		label.textContent = input.value
 	} else {
-		showInput(container)
+		input.value = label.textContent
 	}
+	item.classList.toggle('isEditing')
+	document.body.classList.toggle('intent-focus')
+	// }
 }
 
-function showIntention(parent, value) {
-	parent.parentNode.style.backgroundColor = 'rgba(0, 0, 0, 0.0)'
+const container = document.createElement('div')
+container.id = 'intent-container'
 
-	const intentionWrapper = document.createElement('div')
-	intentionWrapper.className = 'flex'
+const label = document.createElement('label')
 
-	const intentionText = document.createElement('p')
-	intentionText.textContent = value
-	intentionWrapper.appendChild(intentionText)
+const input = document.createElement('input')
+input.type = 'text'
+input.placeholder = 'Input intention here'
 
-	const intentionEdit = document.createElement('button')
-	intentionEdit.appendChild(document.createTextNode('Edit'))
-	intentionEdit.onclick = () => showInput(parent, intentionWrapper, value)
-	intentionWrapper.appendChild(intentionEdit)
+const editButton = document.createElement('button')
+editButton.appendChild(document.createTextNode('Edit'))
+editButton.onclick = editItem
 
-	parent.appendChild(intentionWrapper)
+if (!sessionStorage.getItem('intention')) {
+	// Show intention
+	document.body.classList.add('intent-focus')
+	container.classList.add('isEditing')
+} else {
+	// Set intention
+	label.textContent = sessionStorage.getItem('intention')
 }
 
-function showInput(parent, toDelete, value = '') {
-	parent.parentNode.style.backgroundColor = 'rgba(0, 0, 0, 0.6)'
-
-	const inputWrapper = document.createElement('div')
-	inputWrapper.className = 'flex'
-
-	const inputField = document.createElement('input')
-	inputField.type = 'text'
-	inputField.id = 'intent-input'
-	inputField.value = value
-	inputWrapper.appendChild(inputField)
-
-	const inputButton = document.createElement('button')
-	inputButton.appendChild(document.createTextNode('Submit'))
-	inputButton.onclick = () =>
-		setIntention(parent, inputWrapper, inputField.value)
-	inputWrapper.appendChild(inputButton)
-
-	if (toDelete) {
-		parent.removeChild(toDelete)
-	}
-
-	parent.appendChild(inputWrapper)
-}
-
-function setIntention(parent, toDelete, value) {
-	sessionStorage.setItem('intention', value)
-
-	if (toDelete) {
-		parent.removeChild(toDelete)
-	}
-
-	showIntention(parent, value)
-}
-
-init()
+// Append everything
+container.appendChild(label)
+container.appendChild(input)
+container.appendChild(editButton)
+document.body.appendChild(container)
