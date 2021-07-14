@@ -13,3 +13,17 @@ ul li.isEditing input[type='text'] {
 ul li.isEditing label {
 	display: none;
 }
+
+/* Time stuff */
+
+#time #timeSelect {
+	display: none;
+}
+
+#time.is24Hrs #timeSelect {
+	display: block;
+}
+
+#time.is24Hrs #_timeSelect {
+	display: none;
+}

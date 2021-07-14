@@ -1,10 +1,18 @@
 'use strict'
 
 // Selectors
-
 const list = document.getElementById('list')
 const addItemInput = document.getElementById('add-input')
 const addItemButton = document.getElementById('add-button')
+
+const timeWrapper = document.getElementById('time')
+const timeSwapButton = document.getElementById('swapTime')
+
+const from = document.getElementById('from')
+const to = document.getElementById('to')
+
+const _from = document.getElementById('_from')
+const _to = document.getElementById('_to')
 
 // chrome.storage.local.set({
 // 	sites: ['lorem.de', 'ipsum.com', 'dolor.es', 'amet.io']
@@ -151,12 +159,13 @@ const deleteItem = function () {
 	})
 }
 
-// Time
+// Time stuff
 
-const createTime = function () {
-	function generate_times(step) {
+const createTime = function (interval = 30, AM = false) {
+	const times = (_interval) => {
 		const date = new Date(1970, 0, 1)
-		const times = []
+		let times = []
+
 		while (date.getDate() === 1) {
 			let obj = {}
 			obj.value = date.toLocaleTimeString('it-IT', {
@@ -169,12 +178,52 @@ const createTime = function () {
 			})
 
 			times.push(obj)
-
-			date.setMinutes(date.getMinutes() + step)
+			date.setMinutes(date.getMinutes() + _interval)
 		}
 		return times
 	}
+
+	// const times = generate_times(30)
+	let nodelist = document.createDocumentFragment()
+
+	times(interval).forEach((element) => {
+		let option = document.createElement('option')
+		option.value = element.value
+		option.textContent = !AM ? element.value : element.alt
+		nodelist.appendChild(option)
+	})
+
+	return nodelist
 }
+
+// TODO: Refactor
+const syncTime = function (e) {
+	if (e.target.id === 'from' || e.target.id === '_from') {
+		from.value = e.target.value
+		_from.value = e.target.value
+	} else {
+		to.value = e.target.value
+		_to.value = e.target.value
+	}
+}
+
+const swapTime = function () {
+	const is24Hrs = timeWrapper.classList.contains('is24Hrs')
+
+	if (is24Hrs) {
+		timeSwapButton.textContent = 'Show 24 hour format'
+	} else {
+		timeSwapButton.textContent = 'Show 12 hour format'
+	}
+	timeWrapper.classList.toggle('is24Hrs')
+}
+
+// const setTime = function() {
+// 	const is24Hrs = timeWrapper.classList.contains('is24Hrs')
+
+// 	const from = is24Hrs ? from.value : _from.value
+// 	const to = is24Hrs ?
+// }
 
 // Add listeners
 addItemButton.addEventListener('click', addItem)
@@ -183,6 +232,11 @@ addItemInput.addEventListener('keyup', (e) => {
 		addItem()
 	}
 })
+timeSwapButton.addEventListener('click', swapTime)
+from.addEventListener('change', syncTime)
+_from.addEventListener('change', syncTime)
+to.addEventListener('change', syncTime)
+_to.addEventListener('change', syncTime)
 
 // Render initial list
 read('sites').then((response) => {
@@ -192,5 +246,15 @@ read('sites').then((response) => {
 		Object.keys(sites).forEach((element, index) => {
 			list.appendChild(createItem(element, sites[element]))
 		})
+
+		from.appendChild(createTime(30))
+		to.appendChild(createTime(30))
+		_from.appendChild(createTime(30, true))
+		_to.appendChild(createTime(30, true))
+
+		timeWrapper.classList.add('is24Hrs')
+		timeSwapButton.appendChild(
+			document.createTextNode('Show 12 hour time format')
+		)
 	}
 })
