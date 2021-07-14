@@ -45,6 +45,8 @@ function extractURL(url) {
 	)
 }
 
+// URL item options
+
 const createItem = (id, string = 'example.com') => {
 	const item = document.createElement('li')
 
@@ -147,6 +149,31 @@ const deleteItem = function () {
 			parent.removeChild(item)
 		})
 	})
+}
+
+// Time
+
+const createTime = function () {
+	function generate_times(step) {
+		const date = new Date(1970, 0, 1)
+		const times = []
+		while (date.getDate() === 1) {
+			let obj = {}
+			obj.value = date.toLocaleTimeString('it-IT', {
+				hour: '2-digit',
+				minute: '2-digit'
+			})
+			obj.alt = date.toLocaleTimeString('en-US', {
+				hour: '2-digit',
+				minute: '2-digit'
+			})
+
+			times.push(obj)
+
+			date.setMinutes(date.getMinutes() + step)
+		}
+		return times
+	}
 }
 
 // Add listeners
