@@ -5,8 +5,10 @@ const list = document.getElementById('list')
 const addItemInput = document.getElementById('add-input')
 const addItemButton = document.getElementById('add-button')
 
+const timeCheckbox = document.getElementById('timeCheckbox')
 const timeWrapper = document.getElementById('time')
 const timeSwapButton = document.getElementById('swapTime')
+const timeMsg = document.getElementById('time_msg')
 
 const from = document.getElementById('from')
 const to = document.getElementById('to')
@@ -14,23 +16,18 @@ const to = document.getElementById('to')
 const _from = document.getElementById('_from')
 const _to = document.getElementById('_to')
 
-// chrome.storage.local.set({
-// 	sites: ['lorem.de', 'ipsum.com', 'dolor.es', 'amet.io']
-// })
-
-// chrome.storage.local.set({
-// 	sites: { abc: 'lorem.de', def: 'ipsum.io', ghi: 'dolor.es' }
-// })
-
 function read(key) {
 	return new Promise((resolve, reject) => {
-		if (key != null) {
-			chrome.storage.local.get(key, function (obj) {
-				resolve(obj)
-			})
-		} else {
-			reject(null)
-		}
+		chrome.storage.local.get(
+			key !== undefined ? key : undefined,
+			function (result) {
+				if (Object.values(result)[0] != undefined) {
+					resolve(result)
+				} else {
+					reject()
+				}
+			}
+		)
 	})
 }
 
@@ -85,30 +82,77 @@ const createItem = (id, string = 'example.com') => {
 	return item
 }
 
-const addItem = function () {
-	read('sites').then((response) => {
-		if (response.hasOwnProperty('sites')) {
-			const uid = Math.random().toString(36).substr(2, 4)
-			const url = extractURL(addItemInput.value)
-			const { sites } = response
-
-			if (!Object.values(sites).includes(url)) {
-				sites[uid] = url
-				write({ sites })
-					.then(() => {
-						console.log('Added to store')
-						const item = createItem(uid, url)
-						list.appendChild(item)
-					})
-					.then(() => (addItemInput.value = ''))
-			} else {
-				console.log('Failed adding item. Duplicate URL')
+// Assume that URL is sanitized
+const setItem = function (id, url) {
+	return new Promise((resolve, reject) => {
+		chrome.storage.local.get('sites', (response) => {
+			// Catch error
+			if (chrome.runtime.lastError) {
+				return reject(chrome.runtime.lastError)
 			}
-		} else {
-			console.error(
-				"Couldn't add item, chrome.storage appears to be empty."
+
+			chrome.permissions.request(
+				{
+					permissions: ['scripting'],
+					origins: [url]
+				},
+				(granted) => {
+					// The callback argument will be true if the user granted the permissions.
+					if (granted) {
+						const { sites } = response
+						sites[id] = url
+
+						chrome.storage.local.set({ sites }, () => {
+							// Catch error
+							if (chrome.runtime.lastError) {
+								return reject(chrome.runtime.lastError)
+							}
+							console.log('Set value!')
+
+							resolve(true)
+						})
+					} else {
+						console.log(url)
+						reject(new Error('Permission denied'))
+					}
+				}
 			)
-		}
+		})
+	})
+}
+
+const addItem = function () {
+	// read('sites').then((response) => {
+	// 	if (response.hasOwnProperty('sites')) {
+	// 		const uid = Math.random().toString(36).substr(2, 4)
+	// 		const url = extractURL(addItemInput.value)
+	// 		const { sites } = response
+
+	// 		if (!Object.values(sites).includes(url)) {
+	// 			sites[uid] = url
+	// 			write({ sites })
+	// 				.then(() => {
+	// 					console.log('Added to store')
+	// 					const item = createItem(uid, url)
+	// 					list.appendChild(item)
+	// 				})
+	// 				.then(() => (addItemInput.value = ''))
+	// 		} else {
+	// 			console.log('Failed adding item. Duplicate URL')
+	// 		}
+	// 	} else {
+	// 		console.error(
+	// 			"Couldn't add item, chrome.storage appears to be empty."
+	// 		)
+	// 	}
+	// })
+
+	const uid = Math.random().toString(36).substr(2, 4)
+	const url = addItemInput.value
+
+	setItem(uid, url).then(() => {
+		const item = createItem(uid, url)
+		list.appendChild(item)
 	})
 }
 
@@ -161,6 +205,20 @@ const deleteItem = function () {
 
 // Time stuff
 
+const toggleTime = function () {
+	read('time').then((response) => {
+		const { time } = response
+		const isActive = time.active
+		time.active = !isActive
+
+		write({ time }).then(() => {
+			console.log('Toggled time')
+			timeCheckbox.checked = !isActive
+			timeWrapper.classList.toggle('isActive')
+		})
+	})
+}
+
 const createTime = function (interval = 30, AM = false) {
 	const times = (_interval) => {
 		const date = new Date(1970, 0, 1)
@@ -196,34 +254,42 @@ const createTime = function (interval = 30, AM = false) {
 	return nodelist
 }
 
-// TODO: Refactor
 const syncTime = function (e) {
-	if (e.target.id === 'from' || e.target.id === '_from') {
-		from.value = e.target.value
-		_from.value = e.target.value
-	} else {
-		to.value = e.target.value
-		_to.value = e.target.value
-	}
+	read('time').then((response) => {
+		const { time } = response
+		const id = e.target.id[0] === '_' ? e.target.id.slice(1) : e.target.id
+		time[id] = e.target.value
+
+		write({ time })
+			.then(() => {
+				console.log('Changed time')
+				window[id].value = e.target.value
+				window['_' + id].value = e.target.value
+			})
+			.then(() => {
+				timeMsg.textContent = 'Updated time.'
+				setTimeout(() => {
+					timeMsg.textContent = ''
+				}, 2000)
+			})
+	})
 }
 
 const swapTime = function () {
-	const is24Hrs = timeWrapper.classList.contains('is24Hrs')
+	read('time').then((response) => {
+		const { time } = response
+		const is24Hrs = time.use24Hrs
 
-	if (is24Hrs) {
-		timeSwapButton.textContent = 'Show 24 hour format'
-	} else {
-		timeSwapButton.textContent = 'Show 12 hour format'
-	}
-	timeWrapper.classList.toggle('is24Hrs')
+		time.use24Hrs = !is24Hrs
+
+		write({ time }).then(() => {
+			timeSwapButton.textContent = is24Hrs
+				? 'Show 24 hour format'
+				: 'Show 12 hour format'
+			timeWrapper.classList.toggle('is24Hrs')
+		})
+	})
 }
-
-// const setTime = function() {
-// 	const is24Hrs = timeWrapper.classList.contains('is24Hrs')
-
-// 	const from = is24Hrs ? from.value : _from.value
-// 	const to = is24Hrs ?
-// }
 
 // Add listeners
 addItemButton.addEventListener('click', addItem)
@@ -232,13 +298,15 @@ addItemInput.addEventListener('keyup', (e) => {
 		addItem()
 	}
 })
+
+timeCheckbox.addEventListener('change', toggleTime)
 timeSwapButton.addEventListener('click', swapTime)
 from.addEventListener('change', syncTime)
 _from.addEventListener('change', syncTime)
 to.addEventListener('change', syncTime)
 _to.addEventListener('change', syncTime)
 
-// Render initial list
+// Render initial list & time
 read('sites').then((response) => {
 	if (response.hasOwnProperty('sites')) {
 		const { sites } = response
@@ -246,15 +314,33 @@ read('sites').then((response) => {
 		Object.keys(sites).forEach((element, index) => {
 			list.appendChild(createItem(element, sites[element]))
 		})
-
-		from.appendChild(createTime(30))
-		to.appendChild(createTime(30))
-		_from.appendChild(createTime(30, true))
-		_to.appendChild(createTime(30, true))
-
-		timeWrapper.classList.add('is24Hrs')
-		timeSwapButton.appendChild(
-			document.createTextNode('Show 12 hour time format')
-		)
 	}
+})
+
+read('time').then((response) => {
+	const { time } = response
+
+	if (time.active) {
+		timeWrapper.classList.add('isActive')
+		timeCheckbox.checked = true
+	}
+
+	from.appendChild(createTime(30))
+	to.appendChild(createTime(30))
+	_from.appendChild(createTime(30, true))
+	_to.appendChild(createTime(30, true))
+
+	from.value = time.from
+	to.value = time.to
+	_from.value = from.value
+	_to.value = to.value
+
+	if (time.use24Hrs) {
+		timeWrapper.classList.add('is24Hrs')
+	}
+	timeSwapButton.appendChild(
+		document.createTextNode(
+			time.use24Hrs ? 'Show 12 hour format' : 'Show 24 hour format'
+		)
+	)
 })

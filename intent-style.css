@@ -23,6 +23,7 @@
 .intent-focus {
 	overflow: hidden;
 }
+
 .intent-focus::after {
 	display: block;
 	content: '';

@@ -16,6 +16,14 @@ ul li.isEditing label {
 
 /* Time stuff */
 
+#time {
+	display: none;
+}
+
+#time.isActive {
+	display: block;
+}
+
 #time #timeSelect {
 	display: none;
 }
