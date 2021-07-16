@@ -2,18 +2,6 @@ button {
 	/* border: none; */
 }
 
-ul li input[type='text'] {
-	display: none;
-}
-
-ul li.isEditing input[type='text'] {
-	display: block;
-}
-
-ul li.isEditing label {
-	display: none;
-}
-
 /* Time stuff */
 
 #time {
