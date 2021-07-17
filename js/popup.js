@@ -1,38 +1,64 @@
+let STORAGE_CACHE
+
+// Selectors
+
+const INFO = document.getElementById('info')
+const ADD = document.getElementById('add')
+const REMOVE = document.getElementById('remove')
+
 async function getCurrentTab() {
 	let queryOptions = { active: true, currentWindow: true }
 	let [tab] = await chrome.tabs.query(queryOptions)
 	return tab
 }
 
-let STORAGE_CACHE
+// const createAction = function (sites, currentTab) {
+// 	let item
 
-const DIV = document.getElementById('popup')
+// 	if (!currentTab.url) {
+// 		item = document.createElement('p')
+// 		item.textContent = 'You cannot intent this page...'
+// 		return item
+// 	}
 
-console.log(getCurrentTab())
+// 	const url = new URL(currentTab.url)
 
-const init = function () {
-	const elem = document.createElement('p')
-	const btn = document.createElement('button')
+// 	if (Object.values(sites).some((e) => e === url.hostname)) {
+// 		item = document.createElement('button')
+// 		item.appendChild(document.createTextNode('Remove website'))
+// 		return item
+// 	} else {
+// 		item = document.createElement('button')
+// 		item.appendChild(document.createTextNode('Add website'))
+// 		return item
+// 	}
+// }
 
-	chrome.storage.local.get('sites', (data) => {
-		const { sites } = data
-		STORAGE_CACHE = sites
+chrome.storage.local.get('sites', (data) => {
+	if (chrome.runtime.lastError) {
+		return new Error(chrome.runtime.lastError)
+	}
 
-		getCurrentTab().then((tab) => {
-			const url = new URL(tab.url)
+	const { sites } = data
+	STORAGE_CACHE = sites
 
-			// if (!url) {
-			// 	elem.textContent = 'You cannot intent this page...'
-			// 	DIV.appendChild(elem)
-			// } else if (Object.values(sites).includes(url)) {
-			// 	btn.appendChild(document.createTextNode('Remove website'))
-			// 	DIV.appendChild(btn)
-			// } else {
-			// 	btn.appendChild(document.createTextNode('Add website'))
-			// 	DIV.appendChild(btn)
-			// }
-		})
+	getCurrentTab().then((tab) => {
+		// const { sites } = data
+		// DIV.appendChild(createAction(sites, tab))
+		let url
+		const visible = 'isVisible'
+
+		if (!tab.url) {
+			INFO.classList.add(visible)
+			return
+		} else {
+			url = new URL(tab.url)
+		}
+
+		if (Object.values(sites).some((e) => e === url.hostname)) {
+			REMOVE.classList.add(visible)
+		} else {
+			ADD.classList.add(visible)
+		}
 	})
-}
-
-init()
+})

@@ -34,11 +34,11 @@ function handleNavigation(data) {
 			const hh_mm = `${h < 10 ? '0' + h : h}:${h < 10 ? '0' + m : m}`
 
 			const isActive = time.from < hh_mm && time.to > hh_mm
+
 			if (!isActive) return
 		}
 
-		if (Object.values(sites).some((el) => el === url.hostname)) {
-			console.log('Sucess!')
+		if (Object.values(sites).some((e) => e === url.hostname)) {
 			chrome.scripting.executeScript({
 				target: { tabId: _data.tabId },
 				files: ['js/content.js']

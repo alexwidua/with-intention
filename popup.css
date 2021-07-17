@@ -1,0 +1,9 @@
+p,
+button {
+	display: none;
+}
+
+p.isVisible,
+button.isVisible {
+	display: block;
+}
