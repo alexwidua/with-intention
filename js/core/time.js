@@ -1,5 +1,5 @@
 /**
- * @filedescription Handle time feature that allows the user
+ * @file Handle time feature that allows the user
  * to enable/disable the plugin during certain time periods.
  */
 
@@ -47,15 +47,17 @@ const createTime = function ({ interval, str }) {
 
 /**
  * Enables or disables the time feature.
+ * @param {Function} callback
  */
-const toggleTimeFeature = function () {
+const toggleTimeFeature = function (callback) {
 	chrome.storage.local.get('time', ({ time }) => {
 		const isActive = time.active
 		time.active = !isActive
 
 		chrome.storage.local.set({ time }, () => {
-			timeCheckbox.checked = !isActive
-			timeWrapper.classList.toggle('isActive')
+			if (callback && typeof callback === 'function') {
+				callback(!isActive)
+			}
 		})
 	})
 }
@@ -116,13 +118,26 @@ const setTime = function (e, callback) {
 		// Expects target id to be 'from' or 'to'
 		time[e.target.id] = e.target.value
 
+		let offset
+		const otherSelect = e.target.id === 'from' ? 'to' : 'from'
+
+		if (time[e.target.id] === time[otherSelect]) {
+			if (e.target.selectedIndex < e.target.length - 1) {
+				offset = e.target[e.target.selectedIndex + 1].value
+				time[otherSelect] = offset
+			} else {
+				offset = e.target[e.target.selectedIndex - 1].value
+				time[otherSelect] = offset
+			}
+		}
+
 		chrome.storage.local.set({ time }, () => {
 			if (chrome.runtime.lastError) {
 				return new Error(chrome.runtime.lastError)
 			}
 
 			if (callback && typeof callback === 'function') {
-				callback()
+				callback({ id: otherSelect, index: offset })
 			}
 		})
 	})

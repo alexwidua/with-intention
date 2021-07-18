@@ -1,38 +1,14 @@
+import { addURL, removeURL } from './utils/storage.js'
+import { getKey, getUID } from './utils/helper.js'
+import { getCurrentTab, refreshTab } from './utils/tab.js'
+
 let STORAGE_CACHE
 
 // Selectors
 
-const INFO = document.getElementById('info')
-const ADD = document.getElementById('add')
-const REMOVE = document.getElementById('remove')
-
-async function getCurrentTab() {
-	let queryOptions = { active: true, currentWindow: true }
-	let [tab] = await chrome.tabs.query(queryOptions)
-	return tab
-}
-
-// const createAction = function (sites, currentTab) {
-// 	let item
-
-// 	if (!currentTab.url) {
-// 		item = document.createElement('p')
-// 		item.textContent = 'You cannot intent this page...'
-// 		return item
-// 	}
-
-// 	const url = new URL(currentTab.url)
-
-// 	if (Object.values(sites).some((e) => e === url.hostname)) {
-// 		item = document.createElement('button')
-// 		item.appendChild(document.createTextNode('Remove website'))
-// 		return item
-// 	} else {
-// 		item = document.createElement('button')
-// 		item.appendChild(document.createTextNode('Add website'))
-// 		return item
-// 	}
-// }
+const INFO = document.getElementById('popup_msg')
+const ADD = document.getElementById('popup_add')
+const REMOVE = document.getElementById('popup_remove')
 
 chrome.storage.local.get('sites', (data) => {
 	if (chrome.runtime.lastError) {
@@ -43,8 +19,6 @@ chrome.storage.local.get('sites', (data) => {
 	STORAGE_CACHE = sites
 
 	getCurrentTab().then((tab) => {
-		// const { sites } = data
-		// DIV.appendChild(createAction(sites, tab))
 		let url
 		const visible = 'isVisible'
 
@@ -56,8 +30,18 @@ chrome.storage.local.get('sites', (data) => {
 		}
 
 		if (Object.values(sites).some((e) => e === url.hostname)) {
+			const key = getKey(sites, url.hostname)
+			REMOVE.addEventListener('click', () =>
+				removeURL(key).then(() => refreshTab(() => window.close()))
+			)
+
 			REMOVE.classList.add(visible)
 		} else {
+			const uid = getUID()
+
+			ADD.addEventListener('click', () =>
+				addURL(uid, url).then(() => refreshTab(() => window.close()))
+			)
 			ADD.classList.add(visible)
 		}
 	})

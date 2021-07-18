@@ -1,0 +1,7 @@
+#time {
+	display: none;
+}
+
+#time.isActive {
+	display: block;
+}

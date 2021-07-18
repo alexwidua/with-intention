@@ -1,5 +1,3 @@
-'use strict'
-
 const editItem = function () {
 	const item = this.parentNode
 

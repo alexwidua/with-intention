@@ -1,4 +1,3 @@
-import { addUrl, removeUrl } from './utils/url.js'
 import {
 	createTime,
 	toggleTimeFeature,
@@ -6,104 +5,58 @@ import {
 	setTime
 } from './core/time.js'
 
-// Selectors
-const list = document.getElementById('list')
-const addItemInput = document.getElementById('add-input')
-const addItemButton = document.getElementById('add-button')
+import { createItem, addItem } from './core/list.js'
 
-const timeCheckbox = document.getElementById('timeCheckbox')
-const timeWrapper = document.getElementById('time')
-const timeSwapButton = document.getElementById('swapTime')
-const timeMsg = document.getElementById('time_msg')
+/**
+ * Selectors
+ */
+const LIST = document.getElementById('list')
+const LIST_INPUT = document.getElementById('list_input')
+const LIST_ADD = document.getElementById('list_add')
 
-const from = document.getElementById('from')
-const to = document.getElementById('to')
+const TIME = document.getElementById('time')
+const TIME_TOGGLE = document.getElementById('time_toggle')
+const TIME_FROM_TO = document.getElementById('time_select')
+const TIME_MSG = document.getElementById('time_msg')
+const TIME_FORMAT_BTN = document.getElementById('time_format')
 
-// URL item options
+/**
+ * Event listeners that bind form elements since Chrome
+ * doesn't allow inline bindings.
+ */
 
-const createItem = (id, string = 'example.com') => {
-	const item = document.createElement('li')
-	item.id = id
+LIST_ADD.addEventListener('submit', (e) =>
+	addItem(e, LIST_INPUT.value, ({ uid, hostname }) => {
+		const item = createItem(uid, hostname)
+		LIST.appendChild(item)
+		LIST_INPUT.value = ''
+	})
+)
 
-	// Set up list item
-	const label = document.createElement('label')
-	const deleteButton = document.createElement('button')
+TIME_TOGGLE.addEventListener('change', () =>
+	toggleTimeFeature((state) => {
+		TIME_TOGGLE.value = state
+		TIME.classList.toggle('isActive')
+	})
+)
 
-	label.textContent = string
-
-	deleteButton.appendChild(document.createTextNode('Delete'))
-	deleteButton.className = 'delete'
-	deleteButton.onclick = deleteItem
-
-	item.appendChild(label)
-	item.appendChild(deleteButton)
-
-	return item
-}
-
-const addItem = function () {
-	const uid = Math.random().toString(36).substr(2, 4)
-	const url = addItemInput.value
-
-	addUrl(uid, url)
-		.then((response) => {
-			if (response) {
-				const item = createItem(uid, url)
-				list.appendChild(item)
-			}
-		})
-		.catch((e) => {
-			console.log(e)
-		})
-}
-
-const deleteItem = function () {
-	const item = this.parentNode
-	const parent = item.parentNode
-	const input = item.querySelector('input[type=text]')
-	const id = item.id
-
-	removeUrl(id)
-		.then(() => {
-			parent.removeChild(item)
-		})
-		.catch((e) => {
-			console.log(e)
-		})
-}
-
-// Add listeners
-addItemButton.addEventListener('click', addItem)
-addItemInput.addEventListener('keyup', (e) => {
-	if (e.key === 'Enter') {
-		addItem()
-	}
-})
-
-timeCheckbox.addEventListener('change', toggleTimeFeature)
-
-timeSwapButton.addEventListener('click', () => {
+TIME_FORMAT_BTN.addEventListener('click', () => {
 	toggleTimeFormat((is24Hrs) => {
-		const btnContent = is24Hrs
+		TIME_FORMAT_BTN.textContent = is24Hrs
 			? 'Show 24 hour format'
 			: 'Show 12 hour format'
-		timeSwapButton.textContent = btnContent
 	})
 })
 
-from.addEventListener('change', (e) => {
-	setTime(e, () => {
-		timeMsg.textContent = 'Updated time.'
+TIME_FROM_TO.addEventListener('change', (e) => {
+	setTime(e, ({ id, index }) => {
+		if (index) {
+			const el = document.getElementById(id)
+			el.value = index
+		}
+		TIME_MSG.textContent = 'Updated time.'
 		setTimeout(() => {
-			timeMsg.textContent = ''
-		}, 2000)
-	})
-})
-to.addEventListener('change', (e) => {
-	setTime(e, () => {
-		timeMsg.textContent = 'Updated time.'
-		setTimeout(() => {
-			timeMsg.textContent = ''
+			TIME_MSG.textContent = ''
 		}, 2000)
 	})
 })
@@ -112,12 +65,12 @@ to.addEventListener('change', (e) => {
 
 chrome.storage.local.get(undefined, ({ sites, time }) => {
 	Object.keys(sites).forEach((element, index) => {
-		list.appendChild(createItem(element, sites[element]))
+		LIST.appendChild(createItem(element, sites[element]))
 	})
 
 	if (time.active) {
-		timeWrapper.classList.add('isActive')
-		timeCheckbox.checked = true
+		TIME.classList.add('isActive')
+		TIME_TOGGLE.checked = true
 	}
 
 	let interval, str
@@ -140,7 +93,7 @@ chrome.storage.local.get(undefined, ({ sites, time }) => {
 	from.value = time.from
 	to.value = time.to
 
-	timeSwapButton.appendChild(
+	TIME_FORMAT_BTN.appendChild(
 		document.createTextNode(
 			is24Hrs ? 'Show 12 hour format' : 'Show 24 hour format'
 		)

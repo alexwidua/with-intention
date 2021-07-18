@@ -1,4 +1,15 @@
-const addUrl = function (id, url) {
+/**
+ * @file Utility functions to add or remove a URL from chrome.storage.local.
+ * TODO: Sync storage instead of local
+ */
+
+/**
+ * Write URL to local chrome storage.
+ * @param {String} id
+ * @param {String} url - URL that will be added to store.
+ * @returns Promise if read/write operation succeded and permission was granted
+ */
+const addURL = function addURLToStorage(id, url) {
 	return new Promise((resolve, reject) => {
 		let _url
 		try {
@@ -30,7 +41,7 @@ const addUrl = function (id, url) {
 								'Added' + url + 'with ID' + id + 'to storage.'
 							)
 
-							resolve(true)
+							resolve(_url.hostname)
 						})
 					} else {
 						reject(new Error('Failed to grant permission.'))
@@ -41,7 +52,12 @@ const addUrl = function (id, url) {
 	})
 }
 
-const removeUrl = function (id) {
+/**
+ * Remove a URL from local chrome storage.
+ * @param {String} id - ID of URL that will be removed from store
+ * @returns Promise if read and write operation succeded
+ */
+const removeURL = function removeURLFromStorage(id) {
 	return new Promise((resolve, reject) => {
 		chrome.storage.local.get('sites', (response) => {
 			const { sites } = response
@@ -65,4 +81,4 @@ const removeUrl = function (id) {
 	})
 }
 
-export { addUrl, removeUrl }
+export { addURL, removeURL }

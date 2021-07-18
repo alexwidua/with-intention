@@ -5,26 +5,23 @@
 	</head>
 	<body>
 		<p>Add website that should be blocked:</p>
-		<ul id="list"></ul>
-		<div class="flex">
-			<input type="text" id="add-input" />
-			<button id="add-button">Add</button>
-		</div>
+		<ul id="list">
+			<!-- ... -->
+		</ul>
+		<form id="list_add">
+			<input type="text" id="list_input" />
+			<button>Add</button>
+		</form>
 		<!---->
 		<label>Only active between</label>
-		<input type="checkbox" id="timeCheckbox" value="true" />
-
+		<input type="checkbox" id="time_toggle" />
 		<div id="time">
-			<div id="timeSelect">
+			<form id="time_select">
 				<select name="from" id="from"></select>
 				<select name="to" id="to"></select>
-			</div>
-			<!-- <div id="_timeSelect">
-				<select name="from" id="_from"></select>
-				<select name="to" id="_to"></select>
-			</div> -->
+			</form>
 			<p id="time_msg"></p>
-			<button id="swapTime"></button>
+			<button id="time_format"></button>
 		</div>
 	</body>
 	<script type="module" src="js/options.js"></script>
