@@ -5,8 +5,8 @@
 /**
  * Look for the key of a value in a object.
  * @param {Object} object
- * @param {*} value - Value to look for
- * @returns {String, Number, undefined} - Returns key if key for corresponding value is found
+ * @param {String} value - Value to look for
+ * @returns {String || undefined} - Returns key if key for corresponding value is found
  */
 function getKey(object, value) {
 	return Object.keys(object).find((key) => object[key] === value)

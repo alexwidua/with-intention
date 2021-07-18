@@ -3,6 +3,8 @@
  * TODO: Sync storage instead of local
  */
 
+import { getKey } from '../utils/helper.js'
+
 /**
  * Write URL to local chrome storage.
  * @param {String} id
@@ -18,36 +20,43 @@ const addURL = function addURLToStorage(id, url) {
 			return reject(new Error('Not a valid URL.'))
 		}
 
-		chrome.storage.local.get('sites', (response) => {
+		chrome.storage.local.get('sites', ({ sites }) => {
 			if (chrome.runtime.lastError) {
 				return reject(chrome.runtime.lastError)
 			}
 
-			chrome.permissions.request(
-				{
-					permissions: ['scripting'],
-					origins: [_url.origin + '/']
-				},
-				function (granted) {
-					if (granted) {
-						const { sites } = response
-						sites[id] = _url.hostname
+			if (getKey(sites, _url.hostname) !== undefined) {
+				return reject(new Error('URL has already been added.'))
+			} else {
+				chrome.permissions.request(
+					{
+						permissions: ['scripting'],
+						origins: [_url.origin + '/']
+					},
+					function (granted) {
+						if (granted) {
+							sites[id] = _url.hostname
 
-						chrome.storage.local.set({ sites }, () => {
-							if (chrome.runtime.lastError) {
-								return reject(chrome.runtime.lastError)
-							}
-							console.log(
-								'Added' + url + 'with ID' + id + 'to storage.'
-							)
+							chrome.storage.local.set({ sites }, () => {
+								if (chrome.runtime.lastError) {
+									return reject(chrome.runtime.lastError)
+								}
+								console.log(
+									'Added' +
+										url +
+										'with ID' +
+										id +
+										'to storage.'
+								)
 
-							resolve(_url.hostname)
-						})
-					} else {
-						reject(new Error('Failed to grant permission.'))
+								resolve(_url.hostname)
+							})
+						} else {
+							reject(new Error('Failed to grant permission.'))
+						}
 					}
-				}
-			)
+				)
+			}
 		})
 	})
 }

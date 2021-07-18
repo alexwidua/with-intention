@@ -41,11 +41,11 @@ function handleNavigation(data) {
 		if (Object.values(sites).some((e) => e === url.hostname)) {
 			chrome.scripting.executeScript({
 				target: { tabId: _data.tabId },
-				files: ['js/content.js']
+				files: ['js/container.js']
 			})
 			chrome.scripting.insertCSS({
 				target: { tabId: _data.tabId },
-				files: ['intent-style.css']
+				files: ['style/container.css']
 			})
 		}
 	}

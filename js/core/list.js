@@ -50,6 +50,7 @@ const addItem = function (e, url, callback) {
 			}
 		})
 		.catch((e) => {
+			//TODO: Display proper error message in UI
 			console.log(e)
 		})
 }
