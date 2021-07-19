@@ -10,53 +10,53 @@ import { createItem, addItem } from './core/list.js'
 /**
  * Selectors
  */
-const LIST = document.getElementById('list')
-const LIST_INPUT = document.getElementById('list_input')
-const LIST_ADD = document.getElementById('list_add')
+const list = document.getElementById('list')
+const listInput = document.getElementById('list_input')
+const listAdd = document.getElementById('list_add')
 
-const TIME = document.getElementById('time')
-const TIME_TOGGLE = document.getElementById('time_toggle')
-const TIME_FROM_TO = document.getElementById('time_select')
-const TIME_MSG = document.getElementById('time_msg')
-const TIME_FORMAT_BTN = document.getElementById('time_format')
+const time = document.getElementById('time')
+const timeToggle = document.getElementById('time_toggle')
+const timeFromTo = document.getElementById('time_select')
+const timeMsg = document.getElementById('time_msg')
+const timeFormatButton = document.getElementById('time_format')
 
 /**
  * Event listeners that bind form elements since Chrome
  * doesn't allow inline bindings.
  */
 
-LIST_ADD.addEventListener('submit', (e) =>
-	addItem(e, LIST_INPUT.value, ({ uid, hostname }) => {
+listAdd.addEventListener('submit', (e) =>
+	addItem(e, listInput.value, ({ uid, hostname }) => {
 		const item = createItem(uid, hostname)
-		LIST.appendChild(item)
-		LIST_INPUT.value = ''
+		list.appendChild(item)
+		listInput.value = ''
 	})
 )
 
-TIME_TOGGLE.addEventListener('change', () =>
+timeToggle.addEventListener('change', () =>
 	toggleTimeFeature((state) => {
-		TIME_TOGGLE.value = state
-		TIME.classList.toggle('isActive')
+		timeToggle.value = state
+		time.classList.toggle('isActive')
 	})
 )
 
-TIME_FORMAT_BTN.addEventListener('click', () => {
+timeFormatButton.addEventListener('click', () => {
 	toggleTimeFormat((is24Hrs) => {
-		TIME_FORMAT_BTN.textContent = is24Hrs
+		timeFormatButton.textContent = is24Hrs
 			? 'Show 24 hour format'
 			: 'Show 12 hour format'
 	})
 })
 
-TIME_FROM_TO.addEventListener('change', (e) => {
+timeFromTo.addEventListener('change', (e) => {
 	setTime(e, ({ id, index }) => {
 		if (index) {
 			const el = document.getElementById(id)
 			el.value = index
 		}
-		TIME_MSG.textContent = 'Updated time.'
+		timeMsg.textContent = 'Updated time.'
 		setTimeout(() => {
-			TIME_MSG.textContent = ''
+			timeMsg.textContent = ''
 		}, 2000)
 	})
 })
@@ -65,12 +65,12 @@ TIME_FROM_TO.addEventListener('change', (e) => {
 
 chrome.storage.local.get(undefined, ({ sites, time }) => {
 	Object.keys(sites).forEach((element, index) => {
-		LIST.appendChild(createItem(element, sites[element]))
+		list.appendChild(createItem(element, sites[element]))
 	})
 
 	if (time.active) {
-		TIME.classList.add('isActive')
-		TIME_TOGGLE.checked = true
+		time.classList.add('isActive')
+		timeToggle.checked = true
 	}
 
 	let interval, str
@@ -93,7 +93,7 @@ chrome.storage.local.get(undefined, ({ sites, time }) => {
 	from.value = time.from
 	to.value = time.to
 
-	TIME_FORMAT_BTN.appendChild(
+	timeFormatButton.appendChild(
 		document.createTextNode(
 			is24Hrs ? 'Show 12 hour format' : 'Show 24 hour format'
 		)

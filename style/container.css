@@ -1,4 +1,7 @@
-/* TODO: Proper order of attributes */
+/**
+ *	@file Global injected stylesheet that modifies the document body.
+ *	TODO: Proper order of attributes, check if global style is necessary
+ */
 
 .intent-focus {
 	overflow: hidden;

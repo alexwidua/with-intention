@@ -68,8 +68,7 @@ const addURL = function addURLToStorage(id, url) {
  */
 const removeURL = function removeURLFromStorage(id) {
 	return new Promise((resolve, reject) => {
-		chrome.storage.local.get('sites', (response) => {
-			const { sites } = response
+		chrome.storage.local.get('sites', ({ sites }) => {
 			const url = sites[id]
 
 			delete sites[id]

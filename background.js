@@ -1,6 +1,14 @@
+/**
+ * @file Background service worker that watches the browser navigation and
+ * injects content scripts if URL matches.
+ */
+
 let STORAGE_CACHE
 
-//On fresh install or update
+/**
+ * Run on install (or update).
+ * TODO: Add intro page, add uninstall page
+ */
 chrome.runtime.onInstalled.addListener((details) => {
 	if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
 		chrome.storage.local.set({
@@ -11,14 +19,24 @@ chrome.runtime.onInstalled.addListener((details) => {
 	}
 })
 
+/**
+ * Watches for storage changes since storage is cached.
+ */
 chrome.storage.onChanged.addListener((changes) => {
 	for (let [key, { newValue }] of Object.entries(changes)) {
 		STORAGE_CACHE[key] = newValue
 	}
 })
 
-chrome.webNavigation.onCompleted.addListener(handleNavigation)
+/**
+ * Watches for webNavigation events.
+ */
+chrome.webNavigation.onCommitted.addListener(handleNavigation)
 
+/**
+ * Handle webNavigation and inject content script if URL matches.
+ * @param {Object} data - Contains properties about webNavigation destination
+ */
 function handleNavigation(data) {
 	const url = new URL(data.url)
 
@@ -39,10 +57,23 @@ function handleNavigation(data) {
 		}
 
 		if (Object.values(sites).some((e) => e === url.hostname)) {
-			chrome.scripting.executeScript({
-				target: { tabId: _data.tabId },
-				files: ['js/container.js']
-			})
+			// Inject WebComponents polyfill since Webcomponents are
+			// not supported (yet), see: https://bugs.chromium.org/p/chromium/issues/detail?id=390807#c59
+			//
+			// We also have to inject the polyfill here since executeScript doesn't support modules (yet)
+			chrome.scripting.executeScript(
+				{
+					target: { tabId: _data.tabId },
+					files: ['js/polyfills/custom-elements.min.js']
+				},
+				() => {
+					chrome.scripting.executeScript({
+						target: { tabId: _data.tabId },
+						files: ['js/container.js']
+					})
+				}
+			)
+
 			chrome.scripting.insertCSS({
 				target: { tabId: _data.tabId },
 				files: ['style/container.css']
