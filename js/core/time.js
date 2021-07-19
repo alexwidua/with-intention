@@ -35,10 +35,10 @@ const createTime = function ({ interval, str }) {
 
 	let collection = document.createDocumentFragment()
 
-	times(interval, str).forEach((element) => {
+	times(interval, str).forEach((e) => {
 		let option = document.createElement('option')
-		option.value = element.value
-		option.textContent = element.txt
+		option.value = e.value
+		option.textContent = e.txt
 		collection.appendChild(option)
 	})
 
@@ -89,7 +89,7 @@ const toggleTimeFormat = function (callback) {
 			}
 
 			const interval = 30
-			const str = is24Hrs ? 'en-US' : 'it-IT'
+			const str = is24Hrs ? 'en-US' : 'en-GB'
 
 			from.appendChild(createTime({ interval, str }))
 			to.appendChild(createTime({ interval, str }))
@@ -117,7 +117,6 @@ const setTime = function (e, callback) {
 
 		// Expects target id to be 'from' or 'to'
 		time[e.target.id] = e.target.value
-
 		let offset
 		const otherSelect = e.target.id === 'from' ? 'to' : 'from'
 

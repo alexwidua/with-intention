@@ -1,3 +1,8 @@
+/**
+ * @file Extension's option page which allows the user to add/delete URLs
+ * and set a specific timeframe during which the extension runs/sleeps.
+ */
+
 import {
 	createTime,
 	toggleTimeFeature,
@@ -7,9 +12,7 @@ import {
 
 import { createItem, addItem } from './core/list.js'
 
-/**
- * Selectors
- */
+// Selectors
 const list = document.getElementById('list')
 const listInput = document.getElementById('list_input')
 const listAdd = document.getElementById('list_add')
@@ -20,11 +23,10 @@ const timeFromTo = document.getElementById('time_select')
 const timeMsg = document.getElementById('time_msg')
 const timeFormatButton = document.getElementById('time_format')
 
-/**
- * Event listeners that bind form elements since Chrome
- * doesn't allow inline bindings.
- */
+// Copy
+const showFormat = { gb: 'Show 24 hours format', us: 'Show 12 hours format' }
 
+// Event listeners
 listAdd.addEventListener('submit', (e) =>
 	addItem(e, listInput.value, ({ uid, hostname }) => {
 		const item = createItem(uid, hostname)
@@ -32,28 +34,24 @@ listAdd.addEventListener('submit', (e) =>
 		listInput.value = ''
 	})
 )
-
 timeToggle.addEventListener('change', () =>
 	toggleTimeFeature((state) => {
 		timeToggle.value = state
 		time.classList.toggle('isActive')
 	})
 )
-
 timeFormatButton.addEventListener('click', () => {
 	toggleTimeFormat((is24Hrs) => {
-		timeFormatButton.textContent = is24Hrs
-			? 'Show 24 hour format'
-			: 'Show 12 hour format'
+		timeFormatButton.textContent = is24Hrs ? showFormat.gb : showFormat.us
 	})
 })
-
 timeFromTo.addEventListener('change', (e) => {
 	setTime(e, ({ id, index }) => {
 		if (index) {
 			const el = document.getElementById(id)
 			el.value = index
 		}
+		// TODO: Make more elegant
 		timeMsg.textContent = 'Updated time.'
 		setTimeout(() => {
 			timeMsg.textContent = ''
@@ -61,11 +59,10 @@ timeFromTo.addEventListener('change', (e) => {
 	})
 })
 
-// Action :)
-
+// Setup
 chrome.storage.local.get(undefined, ({ sites, time }) => {
-	Object.keys(sites).forEach((element, index) => {
-		list.appendChild(createItem(element, sites[element]))
+	Object.keys(sites).forEach((e) => {
+		list.appendChild(createItem(e, sites[e]))
 	})
 
 	if (time.active) {
@@ -78,7 +75,7 @@ chrome.storage.local.get(undefined, ({ sites, time }) => {
 
 	if (is24Hrs) {
 		interval = 30
-		str = 'it-IT'
+		str = 'en-GB'
 		from.appendChild(createTime({ interval, str }))
 		to.appendChild(createTime({ interval, str }))
 		console.log(createTime({ interval, str }))
@@ -94,8 +91,6 @@ chrome.storage.local.get(undefined, ({ sites, time }) => {
 	to.value = time.to
 
 	timeFormatButton.appendChild(
-		document.createTextNode(
-			is24Hrs ? 'Show 12 hour format' : 'Show 24 hour format'
-		)
+		document.createTextNode(is24Hrs ? showFormat.us : showFormat.gb)
 	)
 })

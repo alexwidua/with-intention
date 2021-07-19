@@ -1,8 +1,8 @@
 {
-	"name": "Intent",
+	"name": "Intention",
 	"manifest_version": 3,
 	"version": "0.1",
-	"description": "Turns the page red when you click the icon",
+	"description": "Surf distracting websites with intention.",
 	"permissions": ["webNavigation", "storage"],
 	"action": {
 		"default_popup": "popup.html",
