@@ -17,6 +17,9 @@ chrome.runtime.onInstalled.addListener((details) => {
 		})
 		//chrome.runtime.setUninstallURL('https://example.com/extension-survey');
 	}
+
+	const url = chrome.runtime.getURL('onboarding.html')
+	chrome.tabs.create({ url })
 })
 
 /**
@@ -69,14 +72,14 @@ function handleNavigation(data) {
 				() => {
 					chrome.scripting.executeScript({
 						target: { tabId: _data.tabId },
-						files: ['js/container.js']
+						files: ['js/inject.js']
 					})
 				}
 			)
 
 			chrome.scripting.insertCSS({
 				target: { tabId: _data.tabId },
-				files: ['style/container.css']
+				files: ['style/inject.css']
 			})
 		}
 	}

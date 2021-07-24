@@ -3,7 +3,7 @@
 	"manifest_version": 3,
 	"version": "0.1",
 	"description": "Surf distracting websites with intention.",
-	"permissions": ["webNavigation", "storage"],
+	"permissions": ["webNavigation", "tabs", "storage"],
 	"action": {
 		"default_popup": "popup.html",
 		"default_icon": {
