@@ -2,73 +2,143 @@
  * @file Content script that will get injected into matching websites.
  */
 
-let template = document.createElement('template')
-template.innerHTML = `
+// const url = new URL(window.location.href)
+// const placeholder = 'Your intention to browse ' + url.hostname
+const extensionID = chrome.runtime.id
+const template = document.createElement('template')
+
+template.innerHTML = /*html*/ `
 	<style>
-		#backdrop {
+		/* Blurs the page */
+		#veil {
+			display: block;
 			width: 100%;
 			height: 100%;
-			z-index: 999;
 			position: fixed;
-			top: 0;
 			left: 0;
-			opacity: 1;
-			background: rgba(0,0,0,0.2);
+			top: 0;
+			background-color: rgba(0, 0, 0, 0.4);
+			z-index: 99999;
 			backdrop-filter: blur(10px);
-			transition: opacity .2s;
-
+			visibility: hidden;
+			opacity: 0;
 		}
 
-		#container {
+		#veil.isVisible {
+			visibility: visible;
+			opacity: 1;
+		}
+
+		/* 
+		 * Intention box
+		 */
+		.container {
+			--font-size: 16px;
+			--spacing: 16px;
+
+
 			position: fixed;
-			z-index: 9999;
+			display: inline-block;
+			z-index: 9999999;
+			top: 0;
 			left: 50%;
-			top: 24px;
-			background: #fff;
-			border-radius: 16px;
-			color: #000;
-			padding: 32px;
-			transform: translateX(-50%);
-			box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
-			caret-color: red;
-		}
-
-		#intention {
+			
 			display: flex;
+			justify-content: center;
+			background: rgba(255,255,255,0.8);
+			backdrop-filter: blur(12px);
+			color: #000;
+			font-size: var(--font-size);
+			transform: translateX(-50%);
+			padding: var(--spacing);
+			border-radius: 12px;
+
+			box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+		}
+
+		.container:hover #input::after {
+			opacity: 1;
 		}
 
 
-		.isEditing #input {
-			display: block;
+		/* 
+		 * Intention input
+		 */
+		#input {
+			position: relative;
+			padding: 6px;	
 		}
 
-		.isEditing label {
-			display: none;
-		}
-
-
-		  #input {
-			display: none;
-			  width: 400px;
-		  }
-
-		  #input {
+		#input:focus {
 			border: none;
-			outline: none
-		  }
+			border-bottom: 1px solid #eee;
+			outline: none;
+		}
 
-		  #input:focus, #input:active {
-			  border: none;
-			  outline: none
-		  }
+		#input:empty::before{
+ 			 content:attr(data-placeholder);
+  				color:grey;
+  				font-style:italic;
+		}
+
+		#input:not(:focus):hover {
+			background: rgba(0,0,0,0.025);
+		}
+
+		/*#input::after {
+			left: 100%;
+			top: 0;
+			content: "Edit";		
+			position: absolute;
+			height: 100%;
+			display: flex;
+			align-items: center;
+			padding: 0px var(--spacing);	
+			color: lightgray;
+			opacity: 0;
+		}*/
+
+		#input:focus::after {
+			content: "↵ Enter";
+			pointer-events: none;
+			opacity: 1;
+			left: 100%;
+			top: 0;		
+			white-space: nowrap;
+			position: absolute;
+			height: 100%;
+			display: flex;
+			align-items: center;
+			padding: 0px 32px;	
+			color: lightgray;
+
+		}
+
+		#input:empty:after {
+			pointer-events: all;
+		}
+
+		/* 
+		 * On drag
+		 */
+		.container.is-dragging {
+			cursor:-webkit-grabbing;
+		}
+
+		.container.is-dragging #input:hover {
+			background: none;
+		}
+
+		/* 
+		 * On edit
+		 */
+		.container.is-editing {
+			background: rgba(255,255,255,1);
+		}
 	</style>
-	<div id="backdrop"></div>
-	<div id="container">
-		<form id="intention">
-			<label id="label"></label>
-			<input id="input" autocomplete="off"  />
-			<button id="button" disabled="true">Edit</button>		
-		</form>
+	<div id="veil"></div>
+	<div class="container" id="container">
+			<div id="input" data-placeholder="What is your intention?"></div>
 	</div>
 `
 
@@ -80,72 +150,146 @@ class Intention extends HTMLElement {
 	constructor() {
 		super()
 
-		let shadowRoot = this.attachShadow({ mode: 'open' })
-		// TIL: 'Cloning contents from a <template> element is more performant
-		// than using innerHTML becffause it avoids addtional HTML parse costs'.
+		let rec, initX, initY, isDragging
+		let draggable = true
+		let vector = { x: -1, y: -1 }
+
+		const drag_treshold = 6 // px
+		const shadowRoot = this.attachShadow({ mode: 'open' })
 		shadowRoot.appendChild(template.content.cloneNode(true))
 
-		const backdrop = this.shadowRoot.getElementById('backdrop')
-		const container = this.shadowRoot.getElementById('container')
-		const input = this.shadowRoot.getElementById('input')
-		const label = this.shadowRoot.getElementById('label')
-		const button = this.shadowRoot.getElementById('button')
-		const intention = this.shadowRoot.getElementById('intention')
+		this.veil = this.shadowRoot.getElementById('veil')
+		this.input = this.shadowRoot.getElementById('input')
+		this.container = this.shadowRoot.getElementById('container')
 
-		const url = new URL(window.location.href)
-
-		input.placeholder = 'Your intention to browse ' + url.hostname
-
-		if (!sessionStorage.getItem('intention')) {
+		/**
+		 * Handle input events
+		 */
+		this.input.addEventListener('focus', (e) => {
 			document.body.classList.add('intent-focus')
-			container.classList.add('isEditing')
-			backdrop.style.opacity = 1
-		} else {
-			label.textContent = sessionStorage.getItem('intention')
-			backdrop.style.opacity = 0
-		}
+			this.veil.classList.add('isVisible')
+			this.container.classList.add('is-editing')
+			draggable = false
+		})
 
-		intention.addEventListener('submit', this.editIntention)
-		input.addEventListener('input', function (e) {
-			button.disabled = !e.target.value.length
+		this.input.addEventListener('blur', (e) => {
+			// trap focus if no intention has been set
+			if (!this.input.innerHTML) {
+				this.input.focus()
+			} else {
+				sessionStorage.setItem(
+					`${extensionID}-intention`,
+					e.target.innerHTML
+				)
+				this.veil.classList.remove('isVisible')
+				this.container.classList.remove('is-editing')
+				document.body.classList.remove('intent-focus')
+				this.input.contentEditable = 'false'
+				draggable = true
+			}
+		})
+
+		this.input.addEventListener('keydown', (e) => {
+			// some websites (ex. youtube) prevent whitespaces hence we insert them programmatically, TODO: figure out why
+			if (e.key === ' ' || e.key === 'Spacebar') {
+				e.preventDefault()
+				this.insertAtCursor('&nbsp;')
+			} else if (e.key === 'Enter') {
+				e.preventDefault()
+				this.input.blur()
+			}
+		})
+
+		/**
+		 * Handle drag events
+		 */
+		this.container.addEventListener('mousedown', (e) => {
+			rec = this.container.getBoundingClientRect()
+			initX = e.clientX
+			initY = e.clientY
+			isDragging = true
+		})
+
+		document.addEventListener('mousemove', (e) => {
+			if (draggable && isDragging) {
+				e.preventDefault()
+
+				const deltaX = Math.abs(e.clientX - initX)
+				const deltaY = Math.abs(e.clientY - initY)
+				if (deltaX < drag_treshold && deltaY < drag_treshold) {
+					this.container.classList.add('is-dragging')
+				}
+
+				const absoluteX = Math.min(
+					Math.max(rec.left + e.clientX - initX, 0),
+					window.innerWidth - rec.width
+				)
+				const absoluteY = Math.min(
+					Math.max(rec.top + e.clientY - initY, 0),
+					window.innerHeight - rec.height
+				)
+				const relativeX = (100 * absoluteX) / window.innerWidth //-> %
+				const relativeY = (100 * absoluteY) / window.innerHeight //-> %
+				vector = { x: relativeX, y: relativeY }
+
+				this.container.style.transform = 'none'
+				this.container.style.left = `${vector.x}%`
+				this.container.style.top = `${vector.y}%`
+			}
+		})
+
+		document.addEventListener('mouseup', (e) => {
+			const deltaX = Math.abs(e.clientX - initX)
+			const deltaY = Math.abs(e.clientY - initY)
+
+			if (deltaX < drag_treshold && deltaY < drag_treshold) {
+				this.input.contentEditable = true
+				this.input.focus()
+			} else {
+				sessionStorage.setItem(
+					`${extensionID}-position`,
+					JSON.stringify(vector)
+				)
+			}
+			isDragging = false
+			this.container.classList.remove('is-dragging')
 		})
 	}
 
 	connectedCallback() {
-		// When creating closed shadow trees, you'll need to stash the shadow root
-		// for later if you want to use it again. Kinda pointless.
-		const input = this.shadowRoot.getElementById('input')
-		input.focus()
+		if (sessionStorage.getItem(`${extensionID}-position`)) {
+			const storage = sessionStorage.getItem(`${extensionID}-position`)
+			const pos = JSON.parse(storage)
+			if (pos.x > -1 && pos.y > -1) {
+				this.container.style.transform = 'none'
+				this.container.style.left = `${pos.x}%`
+				this.container.style.top = `${pos.y}%`
+			}
+		}
+
+		if (!sessionStorage.getItem(`${extensionID}-intention`)) {
+			this.input.contentEditable = true
+			this.input.focus()
+		} else {
+			this.input.innerHTML = sessionStorage.getItem(
+				`${extensionID}-intention`
+			)
+		}
 	}
 
-	/**
-	 * Edit intention and set session storage.
-	 * @param {Event}
-	 */
-	editIntention(e) {
-		e.preventDefault()
-		const item = this.parentNode
-		const parent = item.parentNode
-
-		const backdrop = parent.getElementById('backdrop')
-		const input = parent.getElementById('input')
-		const label = parent.getElementById('label')
-
-		const isEditing = item.classList.contains('isEditing')
-
-		if (isEditing) {
-			sessionStorage.setItem('intention', input.value)
-			label.textContent = input.value
-			backdrop.style.opacity = 0
-		} else {
-			input.value = label.textContent
-			backdrop.style.opacity = 1
+	insertAtCursor(character) {
+		const root = this.shadowRoot
+		if (root.getSelection && root.getSelection().getRangeAt) {
+			const range = root.getSelection().getRangeAt(0)
+			const node = range.createContextualFragment(character)
+			range.deleteContents()
+			range.insertNode(node)
+			root.getSelection().collapseToEnd()
+			root.getSelection().modify('move', 'forward', 'character')
 		}
-		item.classList.toggle('isEditing')
-		document.body.classList.toggle('intent-focus')
 	}
 }
 
 customElements.define('intention-container', Intention)
 const container = document.createElement('intention-container')
-document.body.appendChild(container)
+document.body.prepend(container)
