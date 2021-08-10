@@ -4,11 +4,11 @@ import { getCurrentTab, refreshTab } from './utils/tab.js'
 
 let STORAGE_CACHE
 
-// Selectors
-
-const INFO = document.getElementById('popup_msg')
-const ADD = document.getElementById('popup_add')
-const REMOVE = document.getElementById('popup_remove')
+const actionProhibited = document.getElementById('action-prohibited')
+const addWebsite = document.getElementById('add-website')
+const addButton = document.getElementById('add-button')
+const removeWebsite = document.getElementById('remove-website')
+const removeButton = document.getElementById('remove-button')
 
 chrome.storage.local.get('sites', (data) => {
 	if (chrome.runtime.lastError) {
@@ -19,30 +19,36 @@ chrome.storage.local.get('sites', (data) => {
 	STORAGE_CACHE = sites
 
 	getCurrentTab().then((tab) => {
-		let url
-		const visible = 'isVisible'
-
 		if (!tab.url) {
-			INFO.classList.add(visible)
+			actionProhibited.classList.add(IsVisibleClass)
 			return
-		} else {
-			url = new URL(tab.url)
+		}
+
+		const url = new URL(tab.url)
+		const IsVisibleClass = 'is-visible'
+
+		addButton.textContent = `Add ${url.hostname}`
+		removeButton.textContent = `Remove ${url.hostname}`
+		console.log(url)
+
+		if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+			actionProhibited.classList.add(IsVisibleClass)
+			return
 		}
 
 		if (Object.values(sites).some((e) => e === url.hostname)) {
 			const key = getKey(sites, url.hostname)
-			REMOVE.addEventListener('click', () =>
+			removeButton.addEventListener('click', () =>
 				removeURL(key).then(() => refreshTab(() => window.close()))
 			)
-
-			REMOVE.classList.add(visible)
+			removeWebsite.classList.add(IsVisibleClass)
 		} else {
 			const uid = getUID()
 
-			ADD.addEventListener('click', () =>
+			addButton.addEventListener('click', () =>
 				addURL(uid, url).then(() => refreshTab(() => window.close()))
 			)
-			ADD.classList.add(visible)
+			addWebsite.classList.add(IsVisibleClass)
 		}
 	})
 })
