@@ -2,7 +2,7 @@
  * @file Provides functionality for the extension's option page.
  */
 
-import { addURL, removeURL } from '../utils/storage.js'
+import { addURL, removeURL } from './storage.js'
 
 /**
  * Creates a LI node containing a name and a delete button.
@@ -19,7 +19,7 @@ const createItem = function (id, str) {
 
 	label.textContent = str
 
-	deleteButton.appendChild(document.createTextNode('Delete'))
+	deleteButton.appendChild(document.createTextNode('Remove'))
 	deleteButton.className = 'delete'
 	deleteButton.onclick = removeItem
 
