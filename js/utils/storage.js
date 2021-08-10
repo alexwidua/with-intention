@@ -3,7 +3,7 @@
  * TODO: Sync storage instead of local
  */
 
-import { getKey } from '../utils/helper.js'
+import { getKey } from './helper.js'
 
 /**
  * Write URL to local chrome storage.
