@@ -1,14 +1,32 @@
 /**
- * @file Content script that will get injected into matching websites.
+ * @file Content script that gets injected in matching websites
+ * and displays the intention field.
  */
 
-// const url = new URL(window.location.href)
-// const placeholder = 'Your intention to browse ' + url.hostname
+const url = new URL(window.location.href)
+const placeholder = 'Your intention to browse ' + url.hostname
 const extensionID = chrome.runtime.id
 const template = document.createElement('template')
 
 template.innerHTML = /*html*/ `
 	<style>
+		/* ./style/vars.css */
+		@media (prefers-color-scheme: dark) {
+			.container{
+				--color-background: rgb(53, 54, 58);
+				--color-font: rgb(255, 255, 255, 0.8);
+				--color-subtle: rgba(255,255,255,0.2);
+			}
+		}
+
+		@media (prefers-color-scheme: light) {
+			.container {
+				--color-background: rgb(255, 255, 255);
+				--color-font: rgb(53, 54, 58);
+				--color-subtle: rgba(0,0,0,0.2);
+			}
+		}
+
 		/* Blurs the page */
 		#veil {
 			display: block;
@@ -35,19 +53,22 @@ template.innerHTML = /*html*/ `
 		.container {
 			--font-size: 16px;
 			--spacing: 16px;
+			--color-accent: rgba(0, 122, 255, 1);
 
 
 			position: fixed;
 			display: inline-block;
 			z-index: 9999999;
-			top: 0;
+			top: 16px;
 			left: 50%;
+			cursor: grab;
+
 			
 			display: flex;
 			justify-content: center;
-			background: rgba(255,255,255,0.8);
+			background: var(--color-background);
 			backdrop-filter: blur(12px);
-			color: #000;
+			color: var(--color-font);
 			font-size: var(--font-size);
 			transform: translateX(-50%);
 			padding: var(--spacing);
@@ -56,27 +77,23 @@ template.innerHTML = /*html*/ `
 			box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 		}
 
-		.container:hover #input::after {
-			opacity: 1;
-		}
-
-
 		/* 
 		 * Intention input
 		 */
 		#input {
 			position: relative;
 			padding: 6px;	
+			cursor:text !important;
 		}
 
 		#input:focus {
 			border: none;
-			border-bottom: 1px solid #eee;
+			border-bottom: 1px solid var(--color-subtle);
 			outline: none;
 		}
 
 		#input:empty::before{
- 			 content:attr(data-placeholder);
+ 			 content:'${placeholder}';
   				color:grey;
   				font-style:italic;
 		}
@@ -85,21 +102,8 @@ template.innerHTML = /*html*/ `
 			background: rgba(0,0,0,0.025);
 		}
 
-		/*#input::after {
-			left: 100%;
-			top: 0;
-			content: "Edit";		
-			position: absolute;
-			height: 100%;
-			display: flex;
-			align-items: center;
-			padding: 0px var(--spacing);	
-			color: lightgray;
-			opacity: 0;
-		}*/
-
 		#input:focus::after {
-			content: "↵ Enter";
+			content: '↵ Enter';
 			pointer-events: none;
 			opacity: 1;
 			left: 100%;
@@ -118,11 +122,19 @@ template.innerHTML = /*html*/ `
 			pointer-events: all;
 		}
 
+		.container:hover #input::after {
+			opacity: 1;
+		}
+
 		/* 
 		 * On drag
 		 */
-		.container.is-dragging {
-			cursor:-webkit-grabbing;
+		.container.is-about-to-drag {
+			cursor: grabbing !important;
+		}
+
+		.container.is-dragging #input {
+			cursor: grabbing !important;
 		}
 
 		.container.is-dragging #input:hover {
@@ -133,12 +145,14 @@ template.innerHTML = /*html*/ `
 		 * On edit
 		 */
 		.container.is-editing {
-			background: rgba(255,255,255,1);
+			
 		}
+
+		
 	</style>
 	<div id="veil"></div>
 	<div class="container" id="container">
-			<div id="input" data-placeholder="What is your intention?"></div>
+			<div id="input"></div>
 	</div>
 `
 
@@ -208,6 +222,7 @@ class Intention extends HTMLElement {
 			initX = e.clientX
 			initY = e.clientY
 			isDragging = true
+			this.container.classList.add('is-about-to-drag')
 		})
 
 		document.addEventListener('mousemove', (e) => {
@@ -251,7 +266,9 @@ class Intention extends HTMLElement {
 					JSON.stringify(vector)
 				)
 			}
+
 			isDragging = false
+			this.container.classList.remove('is-about-to-drag')
 			this.container.classList.remove('is-dragging')
 		})
 	}
