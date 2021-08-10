@@ -8,20 +8,20 @@ import {
 	toggleTimeFeature,
 	toggleTimeFormat,
 	setTime
-} from './core/time.js'
+} from './utils/time.js'
 
-import { createItem, addItem } from './core/list.js'
+import { createItem, addItem } from './utils/list.js'
 
 // Selectors
 const list = document.getElementById('list')
-const listInput = document.getElementById('list_input')
-const listAdd = document.getElementById('list_add')
+const listInput = document.getElementById('list-input')
+const listAdd = document.getElementById('list-add')
 
-const time = document.getElementById('time')
-const timeToggle = document.getElementById('time_toggle')
-const timeFromTo = document.getElementById('time_select')
-const timeMsg = document.getElementById('time_msg')
-const timeFormatButton = document.getElementById('time_format')
+const timeInput = document.getElementById('time-wrapper')
+const timeToggle = document.getElementById('time-toggle')
+const timeFromTo = document.getElementById('time-select')
+const timeMsg = document.getElementById('time-msg')
+const timeFormatButton = document.getElementById('time-format')
 
 // Copy
 const showFormat = { gb: 'Show 24 hours format', us: 'Show 12 hours format' }
@@ -37,7 +37,8 @@ listAdd.addEventListener('submit', (e) =>
 timeToggle.addEventListener('change', () =>
 	toggleTimeFeature((state) => {
 		timeToggle.value = state
-		time.classList.toggle('isActive')
+		timeInput.classList.toggle('is-active')
+		timeToggle.parentNode.parentNode.classList.toggle('active')
 	})
 )
 timeFormatButton.addEventListener('click', () => {
@@ -65,8 +66,12 @@ chrome.storage.local.get(undefined, ({ sites, time }) => {
 		list.appendChild(createItem(e, sites[e]))
 	})
 
+	const from = document.getElementById('from')
+	const to = document.getElementById('to')
+
 	if (time.active) {
-		time.classList.add('isActive')
+		timeInput.classList.add('is-active')
+		timeToggle.parentNode.parentNode.classList.toggle('active')
 		timeToggle.checked = true
 	}
 
@@ -78,13 +83,11 @@ chrome.storage.local.get(undefined, ({ sites, time }) => {
 		str = 'en-GB'
 		from.appendChild(createTime({ interval, str }))
 		to.appendChild(createTime({ interval, str }))
-		console.log(createTime({ interval, str }))
 	} else {
 		interval = 30
 		str = 'en-US'
 		from.appendChild(createTime({ interval, str }))
 		to.appendChild(createTime({ interval, str }))
-		console.log(createTime({ interval, str }))
 	}
 
 	from.value = time.from
