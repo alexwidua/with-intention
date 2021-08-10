@@ -2,10 +2,46 @@
  *	@file Stylesheet for options page.
  */
 
-#time {
+@import url('base.css');
+
+:root {
+	font-size: 16px;
+}
+
+body {
+	background: var(--color-background);
+	color: var(--color-font);
+	font-family: 'Inter', sans-serif;
+}
+
+#time-wrapper {
 	display: none;
 }
 
-#time.isActive {
+#time-wrapper.is-active {
 	display: block;
+}
+
+.container {
+	max-width: 480px;
+	margin: 0 auto;
+}
+
+header {
+	font-size: 1rem;
+	padding: 2rem 0;
+}
+
+section.inactive {
+	background: var(--color-background);
+	box-shadow: inset 0 0 0 4px var(--color-foreground);
+}
+
+section.inactive:hover {
+	box-shadow: inset 0 0 0 20rem var(--color-foreground);
+}
+
+section.active {
+	background: var(--color-foreground) !important;
+	border: none !important;
 }

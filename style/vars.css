@@ -1,0 +1,21 @@
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-background: #272729;
+		--color-foreground: #35363a;
+		--color-font: #aaaeb6;
+		--color-font-primary: #e8edf7;
+	}
+}
+
+@media (prefers-color-scheme: light) {
+	:root {
+		--color-background: rgb(255, 255, 255);
+		--color-font: rgb(53, 54, 58);
+	}
+}
+
+:root {
+	--color-accent: rgba(0, 122, 255, 1);
+	--color-white: rgb(255, 255, 255);
+	--color-secondary: rgba(0, 0, 0, 0.6);
+}
