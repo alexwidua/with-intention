@@ -4,44 +4,50 @@
 
 @import url('base.css');
 
-:root {
-	font-size: 16px;
-}
-
-body {
-	background: var(--color-background);
-	color: var(--color-font);
-	font-family: 'Inter', sans-serif;
-}
-
-#time-wrapper {
-	display: none;
-}
-
-#time-wrapper.is-active {
-	display: block;
-}
-
-.container {
-	max-width: 480px;
-	margin: 0 auto;
-}
-
 header {
 	font-size: 1rem;
 	padding: 2rem 0;
+	display: flex;
+	justify-content: space-between;
 }
 
-section.inactive {
-	background: var(--color-background);
-	box-shadow: inset 0 0 0 4px var(--color-foreground);
+header .logo {
+	background: var(--color-foreground);
+	padding: 32px;
+	border-radius: 48px;
+	display: inline-block;
 }
 
-section.inactive:hover {
-	box-shadow: inset 0 0 0 20rem var(--color-foreground);
+header .logo .o {
+	height: 64px;
+	width: 64px;
+	background: #eee;
+	border-radius: 100%;
 }
 
-section.active {
-	background: var(--color-foreground) !important;
-	border: none !important;
+.manage-time-toggle {
+	font-size: 1.2rem;
+	margin: 0 0 1rem 0;
+	display: flex;
+	align-items: center;
+	color: var(--color-font-primary);
 }
+
+/* #add-url-button {
+	width: 0px;
+	opacity: 0;
+	transition:  opacity 0.2s;
+}
+
+#add-url-button.is-visible {
+	opacity: 1;
+	width: 40px;
+} */
+
+/* #time-edit-container {
+	display: none;
+}
+
+#time-edit-container.is-visible {
+	display: block;
+} */

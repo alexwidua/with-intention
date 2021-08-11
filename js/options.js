@@ -12,67 +12,91 @@ import {
 
 import { createItem, addItem } from './utils/list.js'
 
-// Selectors
-const list = document.getElementById('list')
-const listInput = document.getElementById('list-input')
-const listAdd = document.getElementById('list-add')
+/**
+ * Selectors
+ */
+const url_list = document.getElementById('url-list')
 
-const timeInput = document.getElementById('time-wrapper')
-const timeToggle = document.getElementById('time-toggle')
-const timeFromTo = document.getElementById('time-select')
-const timeMsg = document.getElementById('time-msg')
-const timeFormatButton = document.getElementById('time-format')
+const add_url_container = document.getElementById('add-url-container')
+const add_url_input = document.getElementById('add-url-input')
+const add_url_button = document.getElementById('add-url-button')
 
-// Copy
+const manage_time_toggle = document.getElementById('manage-time-toggle')
+const time_edit_container = document.getElementById('time-edit-container')
+const time_edit_select = document.getElementById('time-edit-select')
+const time_edit_response = document.getElementById('time-edit-response')
+const time_edit_change_format = document.getElementById(
+	'time-edit-change-format'
+)
+
+/**
+ * Copy-related
+ */
 const showFormat = { gb: 'Show 24 hours format', us: 'Show 12 hours format' }
 
-// Event listeners
-listAdd.addEventListener('submit', (e) =>
-	addItem(e, listInput.value, ({ uid, hostname }) => {
+/**
+ * Event listeners
+ */
+
+add_url_container.addEventListener('submit', (e) =>
+	addItem(e, add_url_input.value, ({ uid, hostname }) => {
 		const item = createItem(uid, hostname)
-		list.appendChild(item)
-		listInput.value = ''
+		url_list.appendChild(item)
+		add_url_input.value = ''
 	})
 )
-timeToggle.addEventListener('change', () =>
+
+add_url_input.addEventListener('input', (e) => {
+	if (e.currentTarget.value) {
+		add_url_button.classList.add('is-visible')
+	} else {
+		add_url_button.classList.remove('is-visible')
+	}
+})
+
+manage_time_toggle.addEventListener('change', () =>
 	toggleTimeFeature((state) => {
-		timeToggle.value = state
-		timeInput.classList.toggle('is-active')
-		timeToggle.parentNode.parentNode.classList.toggle('active')
+		manage_time_toggle.value = state
+		time_edit_container.classList.toggle('is-visible')
+		manage_time_toggle.parentNode.parentNode.classList.toggle('is-visible')
 	})
 )
-timeFormatButton.addEventListener('click', () => {
+time_edit_change_format.addEventListener('click', () => {
 	toggleTimeFormat((is24Hrs) => {
-		timeFormatButton.textContent = is24Hrs ? showFormat.gb : showFormat.us
+		time_edit_change_format.textContent = is24Hrs
+			? showFormat.gb
+			: showFormat.us
 	})
 })
-timeFromTo.addEventListener('change', (e) => {
+time_edit_select.addEventListener('change', (e) => {
 	setTime(e, ({ id, index }) => {
 		if (index) {
 			const el = document.getElementById(id)
 			el.value = index
 		}
 		// TODO: Make more elegant
-		timeMsg.textContent = 'Updated time.'
+		time_edit_response.textContent = 'Updated time.'
 		setTimeout(() => {
-			timeMsg.textContent = ''
+			time_edit_response.textContent = ''
 		}, 2000)
 	})
 })
 
-// Setup
+/**
+ * Setup
+ */
 chrome.storage.local.get(undefined, ({ sites, time }) => {
 	Object.keys(sites).forEach((e) => {
-		list.appendChild(createItem(e, sites[e]))
+		url_list.appendChild(createItem(e, sites[e]))
 	})
 
 	const from = document.getElementById('from')
 	const to = document.getElementById('to')
 
 	if (time.active) {
-		timeInput.classList.add('is-active')
-		timeToggle.parentNode.parentNode.classList.toggle('active')
-		timeToggle.checked = true
+		time_edit_container.classList.add('is-visible')
+		manage_time_toggle.parentNode.parentNode.classList.toggle('is-visible')
+		manage_time_toggle.checked = true
 	}
 
 	let interval, str
@@ -93,7 +117,7 @@ chrome.storage.local.get(undefined, ({ sites, time }) => {
 	from.value = time.from
 	to.value = time.to
 
-	timeFormatButton.appendChild(
+	time_edit_change_format.appendChild(
 		document.createTextNode(is24Hrs ? showFormat.us : showFormat.gb)
 	)
 })

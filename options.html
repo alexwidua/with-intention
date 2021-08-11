@@ -5,37 +5,51 @@
 	</head>
 	<body>
 		<div class="container">
-			<header>Intention</header>
-			<section id="add-websites">
+			<header>
+				<div>
+					<h1>Intention</h1>
+					<h2>Options</h2>
+				</div>
+				<div class="logo"><div class="o"></div></div>
+			</header>
+			<section id="manage-websites">
 				<h2>Manage websites</h2>
 				<h3>
 					Add or remove websites that you'd like to browse
 					intentionally.
 				</h3>
-				<ul id="list">
-					<!-- options.js -->
+				<ul id="url-list">
+					<!-- Filled by options.js -->
 				</ul>
-				<form id="list-add">
-					<input type="text" id="list-input" autocomplete="off" />
-					<button>Enter</button>
+				<form id="add-url-container" class="flex">
+					<input
+						id="add-url-input"
+						type="text"
+						autocomplete="off"
+						placeholder="Enter website URL..."
+					/>
+					<button id="add-url-button" class="hidden">Enter</button>
 				</form>
 			</section>
-			<section class="inactive">
-				<label class="toggle">
-					<input type="checkbox" id="time-toggle" />
+
+			<section id="manage-time" class="hollow">
+				<label class="manage-time-toggle">
+					<input id="manage-time-toggle" type="checkbox" />
 					Activate only during certain times
 				</label>
 				<h3>
 					Activates the extension only during a specific set time
 					period.
 				</h3>
-				<div id="time-wrapper">
-					<form id="time-select">
+				<div id="time-edit-container" class="hidden">
+					<form id="time-edit-select">
 						<select name="from" id="from"></select>
 						<select name="to" id="to"></select>
 					</form>
-					<p id="time-msg"></p>
-					<button id="time-format"></button>
+					<p id="time-edit-response"></p>
+					<button id="time-edit-change-format" class="secondary">
+						<!-- options.js -->
+					</button>
 				</div>
 			</section>
 		</div>

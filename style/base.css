@@ -2,11 +2,20 @@
 @import url('vars.css');
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
-section {
-	background: var(--color-foreground);
-	padding: 32px 32px 36px 32px;
-	border-radius: 24px;
-	margin-bottom: 24px;
+:root {
+	font-size: 16px;
+}
+
+body {
+	background: var(--color-background);
+	color: var(--color-font);
+	font-family: 'Inter', sans-serif;
+}
+
+/* Typography */
+
+h1 {
+	margin: 0 0 0.3rem 0;
 }
 
 h2 {
@@ -19,6 +28,17 @@ h3 {
 	font-size: 0.9rem;
 	line-height: 1.5em;
 }
+
+/* Layout */
+
+section {
+	background: var(--color-foreground);
+	padding: 32px 32px 36px 32px;
+	border-radius: 24px;
+	margin-bottom: 32px;
+}
+
+/* Content */
 
 ul > li {
 	padding: 2rem 1rem 2rem 3rem;
@@ -43,20 +63,31 @@ ul > li::before {
 	background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.72 12.312C12.512 11.672 11.912 11.2 11.2 11.2H10.4V8.8C10.4 8.58783 10.3157 8.38434 10.1657 8.23431C10.0157 8.08429 9.81217 8 9.6 8H4.8V6.4H6.4C6.61217 6.4 6.81566 6.31571 6.96569 6.16569C7.11571 6.01566 7.2 5.81217 7.2 5.6V4H8.8C9.22435 4 9.63131 3.83143 9.93137 3.53137C10.2314 3.23131 10.4 2.82435 10.4 2.4V2.072C12.744 3.016 14.4 5.312 14.4 8C14.4 9.664 13.76 11.176 12.72 12.312ZM7.2 14.344C4.04 13.952 1.6 11.264 1.6 8C1.6 7.504 1.664 7.024 1.768 6.568L5.6 10.4V11.2C5.6 11.6243 5.76857 12.0313 6.06863 12.3314C6.36869 12.6314 6.77565 12.8 7.2 12.8V14.344ZM8 0C6.94943 0 5.90914 0.206926 4.93853 0.608964C3.96793 1.011 3.08601 1.60028 2.34315 2.34315C0.842855 3.84344 0 5.87827 0 8C0 10.1217 0.842855 12.1566 2.34315 13.6569C3.08601 14.3997 3.96793 14.989 4.93853 15.391C5.90914 15.7931 6.94943 16 8 16C10.1217 16 12.1566 15.1571 13.6569 13.6569C15.1571 12.1566 16 10.1217 16 8C16 6.94943 15.7931 5.90914 15.391 4.93853C14.989 3.96793 14.3997 3.08601 13.6569 2.34315C12.914 1.60028 12.0321 1.011 11.0615 0.608964C10.0909 0.206926 9.05058 0 8 0V0Z' fill='white'/%3E%3C/svg%3E%0A");
 }
 
-input {
-	border: none;
-	outline: none;
-	background: var(--color-background);
-	border-radius: 4px;
-	padding: 12px;
-	color: var(--color-font-primary);
-}
+/* Input */
 
 button {
 	border: none;
 	outline: none;
 	background: none;
 	color: var(--color-font);
+}
+
+button.secondary {
+	background: var(--color-background);
+	color: var(--color-font);
+	padding: 8px 16px;
+	border-radius: 8px;
+	opacity: 0.6;
+}
+
+input[type='text'] {
+	border: none;
+	outline: none;
+	background: var(--color-background);
+	border-radius: 4px;
+	padding: 12px;
+	width: 100%;
+	color: var(--color-font-primary);
 }
 
 input[type='checkbox'] {
@@ -85,14 +116,6 @@ input[type='checkbox']:checked::after {
 	background-size: 60%;
 }
 
-.toggle {
-	font-size: 1.2rem;
-	margin: 0 0 1rem 0;
-	display: flex;
-	align-items: center;
-	color: var(--color-font-primary);
-}
-
 select {
 	border: none;
 	outline: none;
@@ -119,8 +142,40 @@ select::-webkit-scrollbar-thumb {
 	border: 6px solid var(--color-background);
 }
 
+/* Layout utility */
+
+.container {
+	max-width: 480px;
+	margin: 0 auto;
+}
+
+section.hollow {
+	background: var(--color-background);
+	box-shadow: inset 0 0 0 4px var(--color-foreground);
+}
+
+section.hollow:hover {
+	box-shadow: inset 0 0 0 20rem var(--color-foreground);
+}
+
+section.is-visible {
+	background: var(--color-foreground) !important;
+	border: none !important;
+}
+
+.hidden {
+	display: none;
+}
+
+.is-visible {
+	display: block !important;
+}
+
 /* Utility classes */
 
+.flex {
+	display: flex;
+}
 .sub-text {
 	opacity: 0.6;
 	text-align: center;
