@@ -45,13 +45,16 @@ const addItem = function (e, url, callback) {
 		.then((hostname) => {
 			if (hostname) {
 				if (callback && typeof callback === 'function') {
-					callback({ uid, hostname })
+					callback({ message: 'SUCCESS', uid, hostname })
 				}
 			}
 		})
 		.catch((e) => {
 			//TODO: Display proper error message in UI
-			console.log(e)
+			console.error(e)
+			if (callback && typeof callback === 'function') {
+				callback({ message: e.message })
+			}
 		})
 }
 

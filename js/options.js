@@ -20,6 +20,7 @@ const url_list = document.getElementById('url-list')
 const add_url_container = document.getElementById('add-url-container')
 const add_url_input = document.getElementById('add-url-input')
 const add_url_button = document.getElementById('add-url-button')
+const add_url_error = document.getElementById('add-url-error')
 
 const manage_time_toggle = document.getElementById('manage-time-toggle')
 const time_edit_container = document.getElementById('time-edit-container')
@@ -39,10 +40,15 @@ const showFormat = { gb: 'Show 24 hours format', us: 'Show 12 hours format' }
  */
 
 add_url_container.addEventListener('submit', (e) =>
-	addItem(e, add_url_input.value, ({ uid, hostname }) => {
-		const item = createItem(uid, hostname)
-		url_list.appendChild(item)
-		add_url_input.value = ''
+	addItem(e, add_url_input.value, ({ message, uid, hostname }) => {
+		if (message === 'SUCCESS') {
+			const item = createItem(uid, hostname)
+			url_list.appendChild(item)
+			add_url_input.value = ''
+			add_url_error.textContent = ''
+		} else {
+			add_url_error.textContent = message
+		}
 	})
 )
 
