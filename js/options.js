@@ -15,19 +15,19 @@ import { createItem, addItem } from './utils/list.js'
 /**
  * Selectors
  */
-const url_list = document.getElementById('url-list')
+const url_list = document.querySelector('.url-list')
 
-const add_url_container = document.getElementById('add-url-container')
-const add_url_input = document.getElementById('add-url-input')
-const add_url_button = document.getElementById('add-url-button')
-const add_url_error = document.getElementById('add-url-error')
+const add_url_container = document.querySelector('.add-url-container')
+const add_url_input = document.querySelector('.add-url-input')
+const add_url_button = document.querySelector('.add-url-button')
+const add_url_error = document.querySelector('.add-url-error')
 
-const manage_time_toggle = document.getElementById('manage-time-toggle')
-const time_edit_container = document.getElementById('time-edit-container')
-const time_edit_select = document.getElementById('time-edit-select')
-const time_edit_response = document.getElementById('time-edit-response')
-const time_edit_change_format = document.getElementById(
-	'time-edit-change-format'
+const manage_time_toggle = document.querySelector('.manage-time-toggle')
+const time_edit_container = document.querySelector('.time-edit-container')
+const time_edit_select = document.querySelector('.time-edit-select')
+const time_edit_response = document.querySelector('.time-edit-response')
+const time_edit_change_format = document.querySelector(
+	'.time-edit-change-format'
 )
 
 /**

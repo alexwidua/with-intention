@@ -25,6 +25,10 @@ header .logo .o {
 	border-radius: 100%;
 }
 
+.add-url-error {
+	color: var(--color-text-destructive);
+}
+
 .manage-time-toggle {
 	display: flex;
 	align-items: center;
