@@ -9,8 +9,8 @@
 }
 
 body {
-	background: var(--color-background);
 	color: var(--color-font);
+	background: var(--color-background);
 }
 
 #popup {
@@ -19,10 +19,10 @@ body {
 }
 
 h1 {
+	margin: 0 0 1rem 0;
+	font-weight: 400;
 	font-size: 1rem;
 	line-height: 1;
-	font-weight: 400;
-	margin: 0 0 1rem 0;
 }
 
 p {
@@ -43,13 +43,13 @@ p {
 }
 
 button {
-	background: var(--color-accent);
+	width: 100%;
+	padding: 12px 24px;
 	color: var(--color-white);
+	background: var(--color-accent);
+	border: none;
 	border-radius: 14px;
 	outline: none;
-	border: none;
-	padding: 12px 24px;
-	width: 100%;
 }
 
 button:hover {

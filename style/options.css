@@ -5,32 +5,60 @@
 @import url('base.css');
 
 header {
-	font-size: 1rem;
-	padding: 2rem 0;
 	display: flex;
 	justify-content: space-between;
+	padding: 2rem 0;
+	font-size: 1rem;
 }
 
 header .logo {
-	background: var(--color-foreground);
-	padding: 32px;
-	border-radius: 48px;
 	display: inline-block;
+	padding: 32px;
+	background: var(--color-foreground);
+	border-radius: 48px;
 }
 
 header .logo .o {
-	height: 64px;
 	width: 64px;
+	height: 64px;
 	background: #eee;
 	border-radius: 100%;
 }
 
 .manage-time-toggle {
-	font-size: 1.2rem;
-	margin: 0 0 1rem 0;
 	display: flex;
 	align-items: center;
-	color: var(--color-font-primary);
+	margin: 0 0 1rem 0;
+	color: var(--color-text-primary);
+	font-size: 1.2rem;
+}
+
+.time-edit-container {
+	padding-top: 16px;
+}
+
+.time-edit-select {
+	width: 100%;
+}
+
+.time-edit-select label {
+	font-size: 0.8rem;
+}
+
+.time-edit-change-format-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding-top: 12px;
+}
+
+.time-edit-change-format-container button {
+	opacity: 0.4;
+	transition: opacity 0.2s;
+}
+
+.time-edit-change-format-container button:hover {
+	opacity: 1;
 }
 
 /* #add-url-button {

@@ -14,22 +14,32 @@
 			</header>
 			<section id="manage-websites">
 				<h2>Manage websites</h2>
-				<h3>
+				<h3 class="description">
 					Add or remove websites that you'd like to browse
 					intentionally.
 				</h3>
 				<ul id="url-list">
-					<!-- Filled by options.js -->
+					<!-- list items with url and remove button / options.js -->
 				</ul>
 				<form id="add-url-container" class="flex">
 					<input
 						id="add-url-input"
 						type="text"
 						autocomplete="off"
-						placeholder="Enter website URL..."
+						placeholder="https://example.com/"
 					/>
-					<button id="add-url-button" class="hidden">Enter</button>
+					<button id="add-url-button" class="hidden primary">
+						Add
+					</button>
 				</form>
+				<p id="add-url-error" class="hint">
+					<!-- URL error message / options.js -->
+				</p>
+				<p class="hint">
+					The URL entered must match the page URL exactly. <br />
+					It's best to copy paste the URL instead of typing it
+					yourself.
+				</p>
 			</section>
 
 			<section id="manage-time" class="hollow">
@@ -37,19 +47,32 @@
 					<input id="manage-time-toggle" type="checkbox" />
 					Activate only during certain times
 				</label>
-				<h3>
+				<h3 class="description">
 					Activates the extension only during a specific set time
 					period.
 				</h3>
-				<div id="time-edit-container" class="hidden">
-					<form id="time-edit-select">
-						<select name="from" id="from"></select>
-						<select name="to" id="to"></select>
+				<div
+					id="time-edit-container"
+					class="time-edit-container hidden"
+				>
+					<form id="time-edit-select" class="time-edit-select flex">
+						<div class="flex col">
+							<label>From</label>
+							<select name="from" id="from"></select>
+						</div>
+						<div class="flex col">
+							<label>To</label>
+							<select name="to" id="to"></select>
+						</div>
 					</form>
-					<p id="time-edit-response"></p>
-					<button id="time-edit-change-format" class="secondary">
-						<!-- options.js -->
-					</button>
+					<p id="time-edit-response" class="hint">
+						<!-- displays success message on time change / options.js -->
+					</p>
+					<div class="time-edit-change-format-container">
+						<button id="time-edit-change-format" class="secondary">
+							<!-- toggle between 12 and 24 hr format / options.js -->
+						</button>
+					</div>
 				</div>
 			</section>
 		</div>
