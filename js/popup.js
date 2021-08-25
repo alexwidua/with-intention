@@ -4,11 +4,11 @@ import { getCurrentTab, refreshTab } from './utils/tab.js'
 
 let STORAGE_CACHE
 
-const actionProhibited = document.getElementById('action-prohibited')
-const addWebsite = document.getElementById('add-website')
-const addButton = document.getElementById('add-button')
-const removeWebsite = document.getElementById('remove-website')
-const removeButton = document.getElementById('remove-button')
+const actionProhibited = document.querySelector('.action-prohibited')
+const addWebsite = document.querySelector('.add-website')
+const addButton = document.querySelector('.add-button')
+const removeWebsite = document.querySelector('.remove-website')
+const removeButton = document.querySelector('.remove-button')
 
 chrome.storage.local.get('sites', (data) => {
 	if (chrome.runtime.lastError) {

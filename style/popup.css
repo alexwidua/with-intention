@@ -2,23 +2,14 @@
  * @file Stylesheet for tab bar popup
  */
 
-@import url('vars.css');
+@import url('base.css');
 
-:root {
-	font-size: 16px;
+.popup {
+	padding: 24px;
+	background: var(--color-foreground);
 }
 
-body {
-	color: var(--color-font);
-	background: var(--color-background);
-}
-
-#popup {
-	padding: 16px 16px 8px 16px;
-	border-radius: 8px;
-}
-
-h1 {
+/* h1 {
 	margin: 0 0 1rem 0;
 	font-weight: 400;
 	font-size: 1rem;
@@ -27,21 +18,33 @@ h1 {
 
 p {
 	text-align: center;
-}
+} */
 
-#action-prohibited,
-#add-website,
-#remove-website {
+.action-prohibited,
+.add-website,
+.remove-website {
 	display: none;
 }
 
-#action-prohibited.is-visible,
-#add-website.is-visible,
-#remove-website.is-visible {
+.action-prohibited.is-visible,
+.add-website.is-visible,
+.remove-website.is-visible {
 	display: inline-block;
 	white-space: nowrap;
 }
 
+.add-website button,
+.remove-website button {
+	margin: 8px 0;
+}
+
+.remove-website button {
+	width: 100%;
+	color: var(--color-text-primary);
+	background: var(--color-highlight);
+}
+
+/* 
 button {
 	width: 100%;
 	padding: 12px 24px;
@@ -59,4 +62,4 @@ button:hover {
 .sub-text {
 	font-size: 0.7rem;
 	opacity: 0.7;
-}
+} */

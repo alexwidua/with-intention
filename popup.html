@@ -4,7 +4,7 @@
 		<link rel="stylesheet" href="style/popup.css" />
 	</head>
 	<body>
-		<div id="popup">
+		<div class="popup">
 			<!-- <h1>Intention</h1>
 			<p id="popup_msg">Can't use on this page.</p>
 			<button id="popup_add">Add website</button>
@@ -14,20 +14,22 @@
 				future.
 			</p> -->
 			<h1>Intention</h1>
-			<section id="action-prohibited">
-				<p>Intention can only be used on websites.</p>
-			</section>
-			<section id="add-website">
-				<button id="add-button"><!-- popup.js --></button>
-				<p class="sub-text">Browse with intention.</p>
-			</section>
-			<section id="remove-website">
-				<button id="remove-button"><!-- popup.js --></button>
-				<p class="sub-text">
+			<div class="action-prohibited">
+				<p class="hint">Intention can not be used on internal pages.</p>
+			</div>
+			<div class="add-website">
+				<button class="add-button primary add">
+					<!-- popup.js -->
+				</button>
+				<p class="hint">Browse with intention.</p>
+			</div>
+			<div class="remove-website">
+				<button class="remove-button delete"><!-- popup.js --></button>
+				<p class="hint">
 					You can set sleep times for this extension<br />
 					on the options page.
 				</p>
-			</section>
+			</div>
 		</div>
 	</body>
 	<script type="module" src="js/popup.js"></script>
