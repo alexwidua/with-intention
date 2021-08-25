@@ -23,6 +23,9 @@ const add_url_button = document.querySelector('.add-url-button')
 const add_url_error = document.querySelector('.add-url-error')
 
 const manage_time_toggle = document.querySelector('.manage-time-toggle')
+const manage_time_toggle_checkbox = document.querySelector(
+	'.manage-time-toggle-checkbox'
+)
 const time_edit_container = document.querySelector('.time-edit-container')
 const time_edit_select = document.querySelector('.time-edit-select')
 const time_edit_response = document.querySelector('.time-edit-response')
@@ -60,11 +63,20 @@ add_url_input.addEventListener('input', (e) => {
 	}
 })
 
-manage_time_toggle.addEventListener('change', () =>
+manage_time_toggle.addEventListener('mouseenter', () => {
+	manage_time_toggle.parentNode.classList.add('hover')
+})
+manage_time_toggle.addEventListener('mouseleave', () => {
+	manage_time_toggle.parentNode.classList.remove('hover')
+})
+
+manage_time_toggle_checkbox.addEventListener('change', () =>
 	toggleTimeFeature((state) => {
-		manage_time_toggle.value = state
+		manage_time_toggle_checkbox.value = state
 		time_edit_container.classList.toggle('is-visible')
-		manage_time_toggle.parentNode.parentNode.classList.toggle('is-visible')
+		manage_time_toggle_checkbox.parentNode.parentNode.classList.toggle(
+			'is-visible'
+		)
 	})
 )
 time_edit_change_format.addEventListener('click', () => {
@@ -101,8 +113,10 @@ chrome.storage.local.get(undefined, ({ sites, time }) => {
 
 	if (time.active) {
 		time_edit_container.classList.add('is-visible')
-		manage_time_toggle.parentNode.parentNode.classList.toggle('is-visible')
-		manage_time_toggle.checked = true
+		manage_time_toggle_checkbox.parentNode.parentNode.classList.toggle(
+			'is-visible'
+		)
+		manage_time_toggle_checkbox.checked = true
 	}
 
 	let interval, str

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta charset="UTF-8" />
 		<link rel="stylesheet" href="style/options.css" />
 	</head>
 	<body>
@@ -13,11 +14,12 @@
 				<div class="logo"><div class="o"></div></div>
 			</header>
 			<section class="manage-websites">
-				<h2>Manage websites</h2>
+				<h2>⚙️ Manage websites</h2>
 				<h3 class="description">
 					Add or remove websites that you'd like to browse
 					intentionally.
 				</h3>
+				<span class="separator"></span>
 				<ul class="url-list">
 					<!-- list items with url and remove button / options.js -->
 				</ul>
@@ -28,21 +30,25 @@
 						autocomplete="off"
 						placeholder="https://example.com/"
 					/>
-					<button class="add-url-button hidden primary">Add</button>
+					<button class="add-url-button hidden primary add">
+						Add website
+					</button>
 				</form>
 				<p class="add-url-error hint">
 					<!-- URL error message / options.js -->
 				</p>
 				<p class="hint">
 					The URL entered must match the page URL exactly. <br />
-					It's best to copy paste the URL instead of typing it
-					yourself.
+					Tip: copy and paste the URL instead of typing it yourself.
 				</p>
 			</section>
 
 			<section class="manage-time hollow">
 				<label class="manage-time-toggle">
-					<input class="manage-time-toggle" type="checkbox" />
+					<input
+						class="manage-time-toggle-checkbox"
+						type="checkbox"
+					/>
 					Activate only during certain times
 				</label>
 				<h3 class="description">

@@ -11,6 +11,7 @@ import { addURL, removeURL } from './storage.js'
  * @returns {HTMLLIElement} - Returns HTMLLIElement with text and button children.
  */
 const createItem = function (id, str) {
+	const wrapper = document.createElement('span')
 	const item = document.createElement('li')
 	item.id = id
 
@@ -18,12 +19,13 @@ const createItem = function (id, str) {
 	const deleteButton = document.createElement('button')
 
 	label.textContent = str
+	wrapper.appendChild(label)
 
 	deleteButton.appendChild(document.createTextNode('Remove'))
 	deleteButton.className = 'delete'
 	deleteButton.onclick = removeItem
 
-	item.appendChild(label)
+	item.appendChild(wrapper)
 	item.appendChild(deleteButton)
 
 	return item
