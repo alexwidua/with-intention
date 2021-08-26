@@ -3,3 +3,60 @@
  */
 
 @import url('base.css');
+
+header {
+	display: flex;
+	justify-content: space-between;
+	padding: 2rem 0;
+	font-size: 1rem;
+}
+
+header .logo {
+	display: inline-block;
+	padding: 32px;
+	background: var(--color-foreground);
+	border-radius: 48px;
+}
+
+header .logo .o {
+	width: 64px;
+	height: 64px;
+	background: #eee;
+	border-radius: 100%;
+}
+
+.step {
+	padding: 24px;
+}
+
+.step p {
+	margin-bottom: 1.5rem;
+	font-size: 0.9rem;
+	line-height: 1.5em;
+}
+
+.step button {
+	display: inline-flex;
+	margin: 0 0.25rem;
+	padding: 6px 8px;
+	font-size: 0.75rem;
+	vertical-align: baseline;
+}
+
+.step-heading {
+	display: flex;
+	align-items: center;
+	line-height: 1.5;
+}
+.step-heading::before {
+	display: block;
+	width: 2.5rem;
+	height: 2.5rem;
+	margin-right: 0.875rem;
+	color: #fff;
+	line-height: 2.5rem;
+	text-align: center;
+	background: var(--color-highlight);
+	border-radius: 100%;
+	content: attr(data-step);
+}
