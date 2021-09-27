@@ -24,6 +24,7 @@ template.innerHTML = /*html*/ `
 				--color-background: rgb(255, 255, 255);
 				--color-font: rgb(53, 54, 58);
 				--color-subtle: rgba(0,0,0,0.2);
+				
 			}
 		}
 
@@ -54,6 +55,7 @@ template.innerHTML = /*html*/ `
 			--font-size: 16px;
 			--spacing: 16px;
 			--color-accent: rgba(0, 122, 255, 1);
+			--color-highlight: #3a3b3c;
 
 
 			position: fixed;
@@ -66,13 +68,13 @@ template.innerHTML = /*html*/ `
 			
 			display: flex;
 			justify-content: center;
-			background: var(--color-background);
-			backdrop-filter: blur(12px);
-			color: var(--color-font);
+			background: #fff;
+			/*backdrop-filter: blur(12px);*/
+			color: #000;
 			font-size: var(--font-size);
 			transform: translateX(-50%);
-			padding: var(--spacing);
-			border-radius: 12px;
+			padding: 8px 12px ;
+			border-radius: 96px;
 
 			box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 		}
@@ -84,11 +86,11 @@ template.innerHTML = /*html*/ `
 			position: relative;
 			padding: 6px;	
 			cursor:text !important;
+			border-radius: 96px;
 		}
 
 		#input:focus {
 			border: none;
-			border-bottom: 1px solid var(--color-subtle);
 			outline: none;
 		}
 

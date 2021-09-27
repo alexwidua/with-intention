@@ -60,3 +60,55 @@ header .logo .o {
 	border-radius: 100%;
 	content: attr(data-step);
 }
+
+.illustrations {
+	display: flex;
+	gap: 16px;
+	justify-content: space-between;
+	width: 100%;
+}
+
+.illustrations span {
+	position: relative;
+	line-height: 0;
+}
+
+.illustrations :first-child::before,
+.illustrations :last-child::before {
+	position: absolute;
+	top: 8px;
+	left: 8px;
+	z-index: 1000;
+	width: 20px;
+	height: 20px;
+	color: var(--color-text-primary);
+	font-size: 0.75rem;
+	line-height: 20px;
+	text-align: center;
+	background: var(--color-background);
+	border-radius: 100%;
+	opacity: 0.5;
+}
+
+.illustrations :first-child::before {
+	content: '1';
+}
+.illustrations :last-child::before {
+	content: '2';
+}
+
+.illustrations svg {
+	position: relative;
+	border: 1px solid var(--color-highlight);
+	border-radius: 6px;
+}
+
+.intro {
+	margin-bottom: 3rem;
+}
+
+.intro p {
+	margin-bottom: 1rem;
+	font-size: 1.125rem;
+	line-height: 1.4;
+}
