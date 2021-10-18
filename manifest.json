@@ -1,16 +1,16 @@
 {
-	"name": "Intention",
+	"name": "Intentional",
 	"manifest_version": 3,
 	"version": "0.1",
-	"description": "Surf distracting websites with intention.",
+	"description": "Browse distracting websites with intention.",
 	"permissions": ["webNavigation", "tabs", "storage"],
 	"action": {
 		"default_popup": "popup.html",
 		"default_icon": {
-			"16": "/images/get_started16.png",
-			"32": "/images/get_started32.png",
-			"48": "/images/get_started48.png",
-			"128": "/images/get_started128.png"
+			"16": "/images/icon_16.png",
+			"32": "/images/icon_32.png",
+			"48": "/images/icon_48.png",
+			"128": "/images/icon_128.png"
 		}
 	},
 	"optional_permissions": ["scripting"],
@@ -20,9 +20,9 @@
 	},
 	"options_page": "options.html",
 	"icons": {
-		"16": "/images/get_started16.png",
-		"32": "/images/get_started32.png",
-		"48": "/images/get_started48.png",
-		"128": "/images/get_started128.png"
+		"16": "/images/icon_16.png",
+		"32": "/images/icon_32.png",
+		"48": "/images/icon_48.png",
+		"128": "/images/icon_128.png"
 	}
 }
