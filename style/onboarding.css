@@ -4,13 +4,6 @@
 
 @import url('base.css');
 
-header {
-	display: flex;
-	justify-content: space-between;
-	padding: 2rem 0;
-	font-size: 1rem;
-}
-
 .intro {
 	padding: 3rem 0 5rem 0;
 }

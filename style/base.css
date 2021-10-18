@@ -40,6 +40,14 @@ em {
 
 /* Layout */
 
+header {
+	display: flex;
+	justify-content: space-between;
+	padding: 2rem 0;
+	font-size: 1rem;
+	line-height: 1.1;
+}
+
 section {
 	margin-bottom: 2rem;
 	padding: 2rem;
