@@ -1,23 +1,11 @@
-@media (prefers-color-scheme: dark) {
-	:root {
-		--color-background: #18191a;
-		--color-foreground: #242526;
-		--color-highlight: #3a3b3c;
-		--color-text: #aaaeb6;
-		--color-text-primary: #e8edf7;
-		--color-text-secondary: #95999d;
-		--color-text-destructive: #d84b4b;
-	}
-}
-
-@media (prefers-color-scheme: light) {
-	:root {
-		--color-background: rgb(255, 255, 255);
-		--color-font: rgb(53, 54, 58);
-	}
-}
-
 :root {
+	--color-background: #18191a;
+	--color-foreground: #242526;
+	--color-highlight: #3a3b3c;
+	--color-text: #aaaeb6;
+	--color-text-primary: #e8edf7;
+	--color-text-secondary: #95999d;
+	--color-text-destructive: #d84b4b;
 	--color-accent: rgba(0, 122, 255, 1);
 	--color-accent-hover: rgb(30, 139, 255);
 	--color-white: rgb(255, 255, 255);

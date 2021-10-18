@@ -11,20 +11,6 @@ header {
 	font-size: 1rem;
 }
 
-header .logo {
-	display: inline-block;
-	padding: 32px;
-	background: var(--color-foreground);
-	border-radius: 48px;
-}
-
-header .logo .o {
-	width: 64px;
-	height: 64px;
-	background: #eee;
-	border-radius: 100%;
-}
-
 ul {
 	padding-bottom: 16px;
 }

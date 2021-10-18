@@ -78,13 +78,15 @@ footer ul {
 	padding: 0;
 }
 
+footer ul li:hover {
+	background: none;
+}
+
 footer ul li {
 	padding: 0;
 }
 
 /* Content */
-
-/* Button */
 
 button {
 	display: flex;
@@ -162,7 +164,6 @@ input[type='checkbox'] {
 	height: 24px;
 	margin-right: 16px;
 	border-radius: 24px;
-	/* border: 2px solid var(--color-foreground); */
 	box-shadow: inset 0px 0px 0px 4px var(--color-foreground);
 	appearance: none;
 }
@@ -259,6 +260,8 @@ section.is-visible {
 	opacity: 0.6;
 }
 
+/* Custom */
+
 .tip {
 	display: flex;
 }
@@ -282,4 +285,42 @@ section.is-visible {
 .tip p {
 	opacity: 0.6;
 	padding: 0 0 1rem 0 !important;
+}
+
+.logo {
+	display: inline-block;
+	padding: 32px;
+	background: var(--color-foreground);
+	border-radius: 48px;
+}
+
+.logo .o {
+	position: relative;
+	transform: translateX(-6px);
+}
+
+.logo .o,
+.logo .o::after {
+	width: 64px;
+	height: 64px;
+	background: linear-gradient(
+		190deg,
+		rgba(255, 255, 255, 1) 0%,
+		rgba(255, 255, 255, 0) 100%
+	);
+	border-radius: 100%;
+	transition: transform 0.6s;
+}
+
+.logo .o::after {
+	content: '';
+	position: absolute;
+	left: 12px;
+}
+
+.logo:hover .o {
+	transform: translateX(0px);
+}
+.logo:hover .o::after {
+	transform: translateX(-12px);
 }
