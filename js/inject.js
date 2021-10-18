@@ -124,10 +124,11 @@ template.innerHTML = /*html*/ `
 			opacity: 1;
 			content: '↵ Enter';
 			pointer-events: none;
+			transition: opacity .3s;
 		}
 
 		#input:empty::after {
-			opacity: 0.1 !important;
+			opacity: 0 !important;
 		}
 
 		#input:empty::after {
