@@ -1,21 +1,7 @@
 /**
  *	@file Global injected stylesheet that modifies the document body.
- *	TODO: Proper order of attributes, check if global style is necessary
  */
 
 .intent-focus {
 	overflow: hidden;
 }
-
-/* .intent-focus::after {
-	display: block;
-	content: '';
-	width: 100%;
-	height: 100%;
-	position: fixed;
-	left: 0;
-	top: 0;
-	background-color: rgba(0, 0, 0, 0.4);
-	z-index: 99999;
-	backdrop-filter: blur(10px);
-} */
