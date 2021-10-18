@@ -7,7 +7,7 @@ let STORAGE_CACHE
 
 /**
  * Run on install (or update).
- * TODO: Add intro page, add uninstall page
+ * TODO: add uninstall page
  */
 chrome.runtime.onInstalled.addListener((details) => {
 	if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
@@ -16,10 +16,9 @@ chrome.runtime.onInstalled.addListener((details) => {
 			time: { active: false, use24Hrs: true, from: '09:00', to: '17:00' }
 		})
 		//chrome.runtime.setUninstallURL('https://example.com/extension-survey');
+		const url = chrome.runtime.getURL('onboarding.html')
+		chrome.tabs.create({ url })
 	}
-
-	const url = chrome.runtime.getURL('onboarding.html')
-	chrome.tabs.create({ url })
 })
 
 /**
