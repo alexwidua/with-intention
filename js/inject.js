@@ -4,7 +4,7 @@
  */
 
 const url = new URL(window.location.href)
-const placeholder = 'Your intention to browse ' + url.hostname
+const placeholder = 'My intention is...'
 const extensionID = chrome.runtime.id
 const template = document.createElement('template')
 
@@ -36,9 +36,9 @@ template.innerHTML = /*html*/ `
 			position: fixed;
 			left: 0;
 			top: 0;
-			background-color: rgba(0, 0, 0, 0.4);
+			background-color: rgba(0, 0, 0, 0.8);
 			z-index: 99999;
-			backdrop-filter: blur(10px);
+			backdrop-filter: blur(16px);
 			visibility: hidden;
 			opacity: 0;
 		}
@@ -52,31 +52,54 @@ template.innerHTML = /*html*/ `
 		 * Intention box
 		 */
 		.container {
+			/* We don't have access to vars.css */
 			--font-size: 16px;
 			--spacing: 16px;
 			--color-accent: rgba(0, 122, 255, 1);
 			--color-highlight: #3a3b3c;
 
-
 			position: fixed;
-			display: inline-block;
 			z-index: 9999999;
-			top: 16px;
+			top: 32px;
 			left: 50%;
-			cursor: grab;
-
-			
+			cursor: grab;		
 			display: flex;
+			min-width: 128px;
 			justify-content: center;
+			align-items: center;
 			background: #fff;
-			/*backdrop-filter: blur(12px);*/
 			color: #000;
 			font-size: var(--font-size);
 			transform: translateX(-50%);
-			padding: 8px 12px ;
+			padding: 8px 12px 8px 32px;
 			border-radius: 96px;
-
 			box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+		}
+
+		.icon::before, .icon::after {
+			content:"";
+			height: 16px;
+			width: 16px;
+			background: #000;
+			position: absolute;
+			top: 50%;
+			left: 12px;
+			border-radius: 100%;
+			background: linear-gradient(
+				190deg,
+				rgba(0, 0, 255, 0.5) 0%,
+				rgba(0, 0, 255, 0) 100%
+				);
+			transform: translate3D(0px, -50%, 0);
+			transition: transform .4s;
+		}
+
+		#input:empty + .icon::before {
+			transform: translate3D(-3px, -50%, 0) !important;
+		}
+
+		#input:empty + .icon::after {
+			transform: translate3D(3px, -50%, 0) !important;
 		}
 
 		/* 
@@ -85,14 +108,16 @@ template.innerHTML = /*html*/ `
 		#input {
 			position: relative;
 			padding: 6px;	
-			cursor:text !important;
+			cursor: text !important;
 			border-radius: 96px;
+			min-width: 128px;
 		}
 
 		#input:focus {
 			border: none;
 			outline: none;
 		}
+	
 
 		#input:empty::before{
  			 content:'${placeholder}';
@@ -117,10 +142,13 @@ template.innerHTML = /*html*/ `
 			align-items: center;
 			padding: 0px 32px;	
 			color: lightgray;
-
 		}
 
-		#input:empty:after {
+		#input:empty::after {
+			opacity: 0.1 !important;
+		}
+
+		#input:empty::after {
 			pointer-events: all;
 		}
 
@@ -154,7 +182,7 @@ template.innerHTML = /*html*/ `
 	</style>
 	<div id="veil"></div>
 	<div class="container" id="container">
-			<div id="input"></div>
+			<div id="input"></div><span class="icon"></span>
 	</div>
 `
 
