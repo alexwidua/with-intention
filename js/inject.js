@@ -10,37 +10,19 @@ const template = document.createElement('template')
 
 template.innerHTML = /*html*/ `
 	<style>
-		/* ./style/vars.css */
-		@media (prefers-color-scheme: dark) {
-			.container{
-				--color-background: rgb(53, 54, 58);
-				--color-font: rgb(255, 255, 255, 0.8);
-				--color-subtle: rgba(255,255,255,0.2);
-			}
-		}
-
-		@media (prefers-color-scheme: light) {
-			.container {
-				--color-background: rgb(255, 255, 255);
-				--color-font: rgb(53, 54, 58);
-				--color-subtle: rgba(0,0,0,0.2);
-				
-			}
-		}
-
 		/* Blurs the page */
 		#veil {
+			position: fixed;
+			top: 0;
+			left: 0;
+			z-index: 99999;
 			display: block;
 			width: 100%;
 			height: 100%;
-			position: fixed;
-			left: 0;
-			top: 0;
 			background-color: rgba(0, 0, 0, 0.8);
-			z-index: 99999;
-			backdrop-filter: blur(16px);
 			visibility: hidden;
 			opacity: 0;
+			backdrop-filter: blur(16px);
 		}
 
 		#veil.isVisible {
@@ -49,8 +31,8 @@ template.innerHTML = /*html*/ `
 		}
 
 		/* 
-		 * Intention box
-		 */
+		* Intention box
+		*/
 		.container {
 			/* We don't have access to vars.css */
 			--font-size: 16px;
@@ -59,39 +41,40 @@ template.innerHTML = /*html*/ `
 			--color-highlight: #3a3b3c;
 
 			position: fixed;
-			z-index: 9999999;
 			top: 32px;
 			left: 50%;
-			cursor: grab;		
+			z-index: 9999999;
 			display: flex;
-			min-width: 128px;
-			justify-content: center;
 			align-items: center;
-			background: #fff;
+			justify-content: center;
+			min-width: 128px;
+			padding: 8px 12px 8px 42px;
 			color: #000;
 			font-size: var(--font-size);
-			transform: translateX(-50%);
-			padding: 8px 12px 8px 32px;
+			background: #fff;
 			border-radius: 96px;
 			box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+			transform: translateX(-50%);
+			cursor: grab;
 		}
 
-		.icon::before, .icon::after {
-			content:"";
-			height: 16px;
-			width: 16px;
-			background: #000;
+		.icon::before,
+		.icon::after {
 			position: absolute;
 			top: 50%;
-			left: 12px;
-			border-radius: 100%;
+			left: 18px;
+			width: 16px;
+			height: 16px;
+			background: #000;
 			background: linear-gradient(
 				190deg,
 				rgba(0, 0, 255, 0.5) 0%,
 				rgba(0, 0, 255, 0) 100%
-				);
+			);
+			border-radius: 100%;
 			transform: translate3D(0px, -50%, 0);
-			transition: transform .4s;
+			transition: transform 0.4s;
+			content: '';
 		}
 
 		#input:empty + .icon::before {
@@ -103,45 +86,44 @@ template.innerHTML = /*html*/ `
 		}
 
 		/* 
-		 * Intention input
-		 */
+		* Intention input
+		*/
 		#input {
 			position: relative;
-			padding: 6px;	
-			cursor: text !important;
-			border-radius: 96px;
 			min-width: 128px;
+			padding: 6px;
+			border-radius: 96px;
+			cursor: text !important;
 		}
 
 		#input:focus {
 			border: none;
 			outline: none;
 		}
-	
 
-		#input:empty::before{
- 			 content:'${placeholder}';
-  				color:grey;
-  				font-style:italic;
+		#input:empty::before {
+			color: grey;
+			font-style: italic;
+			content: '${placeholder}';
 		}
 
 		#input:not(:focus):hover {
-			background: rgba(0,0,0,0.025);
+			background: rgba(0, 0, 0, 0.025);
 		}
 
 		#input:focus::after {
-			content: '↵ Enter';
-			pointer-events: none;
-			opacity: 1;
-			left: 100%;
-			top: 0;		
-			white-space: nowrap;
 			position: absolute;
-			height: 100%;
+			top: 0;
+			left: 100%;
 			display: flex;
 			align-items: center;
-			padding: 0px 32px;	
+			height: 100%;
+			padding: 0px 32px;
 			color: lightgray;
+			white-space: nowrap;
+			opacity: 1;
+			content: '↵ Enter';
+			pointer-events: none;
 		}
 
 		#input:empty::after {
@@ -157,8 +139,8 @@ template.innerHTML = /*html*/ `
 		}
 
 		/* 
-		 * On drag
-		 */
+		* On drag
+		*/
 		.container.is-about-to-drag {
 			cursor: grabbing !important;
 		}
@@ -170,15 +152,6 @@ template.innerHTML = /*html*/ `
 		.container.is-dragging #input:hover {
 			background: none;
 		}
-
-		/* 
-		 * On edit
-		 */
-		.container.is-editing {
-			
-		}
-
-		
 	</style>
 	<div id="veil"></div>
 	<div class="container" id="container">
