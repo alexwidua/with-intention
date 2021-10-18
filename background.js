@@ -43,6 +43,8 @@ chrome.webNavigation.onCommitted.addListener(handleNavigation)
 function handleNavigation(data) {
 	const url = new URL(data.url)
 
+	if (data.transitionType === 'auto_subframe') return
+
 	function handleInjection(_data) {
 		const { sites, time } = STORAGE_CACHE
 
