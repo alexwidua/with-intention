@@ -1,5 +1,6 @@
 {
-	"name": "Intentional",
+	"name": "With Intention",
+	"author": "Alex Widua",
 	"manifest_version": 3,
 	"version": "0.1",
 	"description": "Browse distracting websites with intention.",
