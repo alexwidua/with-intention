@@ -3,8 +3,7 @@
  * and displays the intention field.
  */
 
-const url = new URL(window.location.href)
-const placeholder = 'My intention is...'
+const placeholder = "What's your intention?"
 const extensionID = chrome.runtime.id
 const template = document.createElement('template')
 
@@ -19,7 +18,7 @@ template.innerHTML = /*html*/ `
 			display: block;
 			width: 100%;
 			height: 100%;
-			background-color: rgba(0, 0, 0, 0.8);
+			background-color: rgba(0, 0, 0, 0.4);
 			visibility: hidden;
 			opacity: 0;
 			backdrop-filter: blur(16px);
@@ -48,7 +47,7 @@ template.innerHTML = /*html*/ `
 			align-items: center;
 			justify-content: center;
 			min-width: 128px;
-			padding: 8px 12px 8px 42px;
+			padding: 8px 16px 8px 42px;
 			color: #000;
 			font-size: var(--font-size);
 			background: #fff;
@@ -68,21 +67,24 @@ template.innerHTML = /*html*/ `
 			background: #000;
 			background: linear-gradient(
 				190deg,
-				rgba(0, 0, 255, 0.5) 0%,
-				rgba(0, 0, 255, 0) 100%
+				rgba(192, 192, 192, 0.6) 0%,
+				rgba(155, 155, 155, 0) 100%
 			);
 			border-radius: 100%;
 			transform: translate3D(0px, -50%, 0);
 			transition: transform 0.4s;
 			content: '';
+			opacity: 0.8 !important;
 		}
 
 		#input:empty + .icon::before {
-			transform: translate3D(-3px, -50%, 0) !important;
+			transform: translate3D(-4px, -50%, 0) !important;
+			opacity: 1 !important;
 		}
 
 		#input:empty + .icon::after {
-			transform: translate3D(3px, -50%, 0) !important;
+			transform: translate3D(4px, -50%, 0) !important;
+			opacity: 1 !important;
 		}
 
 		/* 
@@ -102,9 +104,9 @@ template.innerHTML = /*html*/ `
 		}
 
 		#input:empty::before {
-			color: grey;
+			color: #717171;
 			font-style: italic;
-			content: '${placeholder}';
+			content: "${placeholder}";
 		}
 
 		#input:not(:focus):hover {
