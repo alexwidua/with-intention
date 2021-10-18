@@ -18,6 +18,9 @@ chrome.runtime.onInstalled.addListener((details) => {
 		//chrome.runtime.setUninstallURL('https://example.com/extension-survey');
 		const url = chrome.runtime.getURL('onboarding.html')
 		chrome.tabs.create({ url })
+	} else if (details.reason === chrome.runtime.OnInstalledReason.UPDATE) {
+		const url = chrome.runtime.getURL('changelog.html')
+		chrome.tabs.create({ url })
 	}
 })
 
@@ -40,6 +43,8 @@ chrome.webNavigation.onCommitted.addListener(handleNavigation)
  * @param {Object} data - Contains properties about webNavigation destination
  */
 function handleNavigation(data) {
+	if (!data.url) return
+
 	const url = new URL(data.url)
 
 	if (data.transitionType === 'auto_subframe') return
