@@ -25,14 +25,27 @@ header .logo .o {
 	border-radius: 100%;
 }
 
+.intro {
+	padding: 3rem 0 5rem 0;
+}
+
+.intro p {
+	font-size: 1.125rem;
+	line-height: 1.4;
+}
+
 .step {
-	padding: 24px;
+	padding: 1.6rem 1.6rem 2rem 1.6rem;
 }
 
 .step p {
-	margin-bottom: 1.5rem;
+	padding: 1rem 0 2rem 0;
 	font-size: 0.9rem;
 	line-height: 1.5em;
+}
+
+.step p svg {
+	margin: 0 0.4em;
 }
 
 .step button {
@@ -48,6 +61,7 @@ header .logo .o {
 	align-items: center;
 	line-height: 1.5;
 }
+
 .step-heading::before {
 	display: block;
 	width: 2.5rem;
@@ -63,7 +77,7 @@ header .logo .o {
 
 .illustrations {
 	display: flex;
-	gap: 16px;
+	gap: 1rem;
 	justify-content: space-between;
 	width: 100%;
 }
@@ -76,14 +90,14 @@ header .logo .o {
 .illustrations :first-child::before,
 .illustrations :last-child::before {
 	position: absolute;
-	top: 8px;
-	left: 8px;
+	top: 0.5rem;
+	left: 0.5rem;
 	z-index: 1000;
-	width: 20px;
-	height: 20px;
+	width: 1.5rem;
+	height: 1.5rem;
 	color: var(--color-text-primary);
 	font-size: 0.75rem;
-	line-height: 20px;
+	line-height: 1.5rem;
 	text-align: center;
 	background: var(--color-background);
 	border-radius: 100%;
@@ -100,15 +114,5 @@ header .logo .o {
 .illustrations svg {
 	position: relative;
 	border: 1px solid var(--color-highlight);
-	border-radius: 6px;
-}
-
-.intro {
-	margin-bottom: 3rem;
-}
-
-.intro p {
-	margin-bottom: 1rem;
-	font-size: 1.125rem;
-	line-height: 1.4;
+	border-radius: 0.5rem;
 }

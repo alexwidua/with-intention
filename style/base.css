@@ -41,11 +41,11 @@ em {
 /* Layout */
 
 section {
-	margin-bottom: 32px;
-	padding: 32px 32px 36px 32px;
+	margin-bottom: 2rem;
+	padding: 2rem;
 	color: var(--color-text-secondary);
 	background: var(--color-foreground);
-	border-radius: 24px;
+	border-radius: 1.5rem;
 }
 
 .separator {
@@ -102,12 +102,6 @@ button.delete:hover {
 	opacity: 1;
 }
 
-button.add {
-	/* display: flex;
-	align-items: center;
-	justify-content: center;
-	white-space: nowrap; */
-}
 button.add::before {
 	display: block;
 	width: 16px;
@@ -208,26 +202,10 @@ section.hollow {
 	box-shadow: inset 0 0 0 4px var(--color-foreground);
 }
 
-/* section.hollow:hover {
-	box-shadow: inset 0 0 0 20rem var(--color-foreground);
-} */
-
 section.is-visible {
 	background: var(--color-foreground) !important;
 	border: none !important;
 }
-
-/* .hidden {
-	display: none !important;
-}
-
-.is-visible {
-	display: block !important;
-}
-
-.is-visible-flex {
-	display: flex !important;
-} */
 
 /* Utility classes */
 
@@ -277,4 +255,5 @@ section.is-visible {
 
 .tip p {
 	opacity: 0.6;
+	padding: 0 0 1rem 0 !important;
 }
