@@ -19,13 +19,13 @@ chrome.storage.local.get('sites', (data) => {
 	STORAGE_CACHE = sites
 
 	getCurrentTab().then((tab) => {
+		const IsVisibleClass = 'is-visible'
 		if (!tab.url) {
 			actionProhibited.classList.add(IsVisibleClass)
 			return
 		}
 
 		const url = new URL(tab.url)
-		const IsVisibleClass = 'is-visible'
 
 		addButton.textContent = `Add ${url.hostname}`
 		removeButton.textContent = `Remove ${url.hostname}`
