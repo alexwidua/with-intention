@@ -29,6 +29,7 @@ chrome.runtime.onInstalled.addListener((details) => {
  */
 chrome.storage.onChanged.addListener((changes) => {
 	for (let [key, { newValue }] of Object.entries(changes)) {
+		if (!STORAGE_CACHE) return
 		STORAGE_CACHE[key] = newValue
 	}
 })
@@ -47,6 +48,7 @@ function handleNavigation(data) {
 
 	const url = new URL(data.url)
 
+	// Prevent extension triggering on embedded content
 	if (data.transitionType === 'auto_subframe') return
 
 	function handleInjection(_data) {
