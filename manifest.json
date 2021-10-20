@@ -2,9 +2,9 @@
 	"name": "With Intention",
 	"author": "Alex Widua",
 	"manifest_version": 3,
-	"version": "0.1",
+	"version": "0.2",
 	"description": "Browse distracting websites with intention.",
-	"permissions": ["webNavigation", "tabs", "storage"],
+	"permissions": ["webNavigation", "storage"],
 	"action": {
 		"default_popup": "popup.html",
 		"default_icon": {
